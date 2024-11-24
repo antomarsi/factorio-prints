@@ -2,6 +2,11 @@
   "database": {
     "rules": "database.rules.json"
   },
+  "hosting": {
+    "rewrites": [
+      {"source": "**", "function": "app"}
+    ]
+  },
   "functions": [
     {
       "source": "functions",
