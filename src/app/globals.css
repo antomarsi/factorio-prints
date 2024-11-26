@@ -84,7 +84,7 @@
     audio,
     video {
         @apply m-0 p-0;
-        font-size: 100%;
+        font-size: 16px;;
         font: inherit;
         vertical-align: baseline;
     }
@@ -107,7 +107,7 @@
         background-position: center top;
         color: #fff;
         font-family: 'Titillium Web', sans-serif;
-        font-size: 100%;
+        font-size: 16px;;
     }
 
     h1,
@@ -139,6 +139,7 @@
     .button {
         @apply px-3 text-black font-semibold border-none min-w-[128px] whitespace-nowrap py-[10px] bg-[#8e8e8e] relative cursor-pointer;
         line-height: inherit;
+        font-size: 16px;;
         box-shadow: inset 8px 0px 4px -8px #000, inset -8px 0px 4px -8px #000,
             inset 0px 10px 2px -8px #e3e3e3, inset 0px 10px 2px -8px #282828,
             inset 0px -9px 2px -8px #000, 0px 0px 4px 0px #000;
@@ -340,11 +341,11 @@
         @apply relative flex flex-col items-center;
     }
     .submenu > .button {
-        @apply mx-1 mt-2;
+        @apply mt-2;
     }
     .button-green {
         @apply bg-[#5eb663] py-[10px] px-3 text-left text-black font-semibold inline-block min-w-[128px] border-none whitespace-nowrap relative mr-[14px] cursor-pointer h-9;
-        font-size: 100%;
+        font-size: 16px;;
         vertical-align: baseline;
         line-height: inherit;
         box-shadow: inset 8px 0px 4px -8px #000, inset -8px 0px 4px -8px #000,
@@ -394,7 +395,7 @@
 
     .button-green-right {
         @apply bg-[#5eb663] py-[10px] px-3 text-right text-black font-semibold inline-block min-w-[128px] border-none whitespace-nowrap relative mr-[14px] cursor-pointer h-9;
-        font-size: 100%;
+        font-size: 16px;;
         vertical-align: baseline;
         line-height: inherit;
         box-shadow: inset 8px 0px 4px -8px #000, inset 0px 10px 2px -8px #95df99,

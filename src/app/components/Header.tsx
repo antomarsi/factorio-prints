@@ -1,6 +1,6 @@
-"use client"
+'use client';
 import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
-import { AuthContext } from "../context/auth-context";
+import { AuthContext } from "../../context/auth-context";
 import React, { useContext, useMemo } from "react";
 import {
     FaClock,
@@ -28,11 +28,11 @@ const githubProvider = new GithubAuthProvider();
 googleProvider.setCustomParameters({ prompt: "consent select_account" });
 githubProvider.setCustomParameters({ prompt: "consent select_account" });
 
-const Header: React.FC = () => {
+export default function Header() {
     const { user, authenticate, handleLogout } = useContext(AuthContext);
 
     const links = useMemo(() => {
-        const sizeConfig = { size: 27 };
+        const sizeConfig = { size: 24 };
         const routes = [
             {
                 title: process.env.NEXT_PUBLIC_WEBSITE_TITLE,
@@ -82,22 +82,22 @@ const Header: React.FC = () => {
                             items={[
                                 {
                                     title: "My Favorites",
-                                    icon: <FaHeart size={27} />,
+                                    icon: <FaHeart size={16} />,
                                     link: "/my-favotires",
                                 },
                                 {
                                     title: "My Blueprints",
-                                    icon: <FaFolder size={27} />,
+                                    icon: <FaFolder size={16} />,
                                     link: "/my-blueprints",
                                 },
                                 {
                                     title: "My Account",
-                                    icon: <FaCog size={27} />,
+                                    icon: <FaCog size={16} />,
                                     link: "/account",
                                 },
                                 {
                                     title: "Sign out",
-                                    icon: <FaSignOutAlt size={27} />,
+                                    icon: <FaSignOutAlt size={16} />,
                                     onClick: handleLogout,
                                 },
                             ]}
@@ -109,13 +109,13 @@ const Header: React.FC = () => {
                             items={[
                                 {
                                     title: "Google",
-                                    icon: <FaGoogle size={15} />,
+                                    icon: <FaGoogle size={16} />,
                                     onClick: async () =>
                                         await authenticate(googleProvider),
                                 },
                                 {
                                     title: "Github",
-                                    icon: <FaGithub size={15} />,
+                                    icon: <FaGithub size={16} />,
                                     onClick: async () =>
                                         await authenticate(githubProvider),
                                 },
@@ -127,5 +127,3 @@ const Header: React.FC = () => {
         </div>
     );
 };
-
-export default Header;

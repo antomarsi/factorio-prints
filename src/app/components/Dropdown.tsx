@@ -1,7 +1,7 @@
-"use client"
-import React, { MouseEventHandler } from "react";
-import { FaChevronDown } from "react-icons/fa";
-import Button from "./Button";
+'use client';
+import React, { MouseEventHandler } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
+import Button from './Button';
 
 interface DropdownProps {
     icon?: React.ReactElement;
@@ -15,22 +15,22 @@ interface DropdownProps {
     img?: string | null;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ icon, title, items, img }) => {
+export default function Dropdown ({ icon, title, items, img }: DropdownProps) {
     return (
-        <div className="dropdown">
+        <div className='dropdown'>
             <Button
                 title={title}
                 icon={
                     img && (
                         <img
                             src={img}
-                            className="w-6 h-6 rounded-full border-[1px] border-gray-700 border-opacity-50 mr-2"
+                            className='w-6 h-6 rounded-full border-[1px] border-gray-700 border-opacity-50 mr-2'
                         />
                     )
                 }
-                afterIcon={<FaChevronDown className="login-arrow" size={16} />}
+                afterIcon={<FaChevronDown className='login-arrow' size={16} />}
             />
-            <div className="submenu">
+            <div className='submenu'>
                 {items.map((v, i) => (
                     <Button
                         title={v.title}
@@ -43,6 +43,4 @@ const Dropdown: React.FC<DropdownProps> = ({ icon, title, items, img }) => {
             </div>
         </div>
     );
-};
-
-export default Dropdown;
+}

@@ -1,11 +1,11 @@
 'use client';
 import React from 'react';
-import { Panel, PanelInset } from '../../components/Panel';
-import Button from '../../components/Button';
+import { Panel, PanelInset } from '../components/Panel';
+import Button from '../components/Button';
 import Select from 'react-select';
-import Pagination from '@/components/Pagination';
+import Pagination from '@/app/components/Pagination';
 
-const MostRecentPage: React.FC = () => {
+export default function MostRecentPage () {
     return (
         <>
             <Panel title='Most Recent'>
@@ -35,6 +35,4 @@ const MostRecentPage: React.FC = () => {
             </Panel>
         </>
     );
-};
-
-export default MostRecentPage;
+}

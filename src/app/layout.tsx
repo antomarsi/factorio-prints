@@ -3,8 +3,8 @@ import React from 'react';
 import { Titillium_Web } from 'next/font/google';
 
 import './globals.css';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
 import { AuthContextProvider } from '@/context/auth-context';
 
 const titilliumWeb = Titillium_Web({
@@ -19,7 +19,11 @@ export const metadata: Metadata = {
         'Find blueprints for the video game Factorio. Share your designs. Search the tags for mining, smelting, and advanced production blueprints.'
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout ({
+    children
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <html lang='en'>
             <head></head>
@@ -32,6 +36,4 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             </body>
         </html>
     );
-};
-
-export default RootLayout;
+}

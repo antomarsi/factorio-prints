@@ -1,8 +1,8 @@
 'use client';
 import React, { useContext, useState } from 'react';
-import { Panel, PanelInset } from '../../components/Panel';
+import { Panel, PanelInset } from '../components/Panel';
 import { AuthContext } from '../../context/auth-context';
-import Button from '../../components/Button';
+import Button from '../components/Button';
 import { FaSave } from 'react-icons/fa';
 import { updateProfile } from 'firebase/auth';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -11,7 +11,7 @@ interface IFormInput {
     displayName: string;
 }
 
-const AccountSettingsPage: React.FC = () => {
+export default function AccountSettingsPage () {
     const { user, reloadUser } = useContext(AuthContext);
     const {
         register,
@@ -90,6 +90,4 @@ const AccountSettingsPage: React.FC = () => {
             </Panel>
         </>
     );
-};
-
-export default AccountSettingsPage;
+}

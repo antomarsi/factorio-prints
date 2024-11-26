@@ -7,7 +7,6 @@ import {
     FaEllipsisH
 } from 'react-icons/fa';
 import Button from './Button';
-import range from 'lodash.range';
 import { useMemo } from 'react';
 import { returnPaginationRange } from '@/utils/pagination';
 
@@ -19,22 +18,27 @@ interface PaginationProps {
     siblings?: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+export default function Pagination ({
     page,
     totalPage,
     limit,
     siblings = 1,
     link
-}) => {
+}: PaginationProps) {
     const paginationValues = useMemo(() => {
         const values = returnPaginationRange(totalPage, page, limit, siblings);
-        return values.map(v => {
+        return values.map((v, i) => {
             return v === '...' ? (
-                <div className='square-sm w-[30px] min-w-[30px]'>
+                <div key={i} className='square-sm w-[30px] min-w-[30px]'>
                     <FaEllipsisH size={24} />
                 </div>
             ) : (
-                <Button squareSm title={v.toString()} active={v==page}/>
+                <Button
+                    key={i}
+                    squareSm
+                    title={v.toString()}
+                    active={v == page}
+                />
             );
         });
     }, [page, totalPage, limit]);
@@ -65,6 +69,4 @@ const Pagination: React.FC<PaginationProps> = ({
             />
         </>
     );
-};
-
-export default Pagination;
+}
