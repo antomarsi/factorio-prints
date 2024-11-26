@@ -1,3 +1,4 @@
+"use client"
 import React, { MouseEventHandler } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import Button from "./Button";
@@ -8,7 +9,7 @@ interface DropdownProps {
     items: {
         icon?: React.ReactElement;
         title: string;
-        onClick?: MouseEventHandler<HTMLDivElement>;
+        onClick?: MouseEventHandler<HTMLButtonElement>;
         link?: string;
     }[];
     img?: string | null;

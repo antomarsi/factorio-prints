@@ -1,30 +1,36 @@
-import React, { createContext, useState } from "react";
+"use client"
+import React, { createContext, useEffect, useState } from 'react';
 import {
     AuthProvider,
     onAuthStateChanged,
     signInWithPopup,
-    User,
-} from "firebase/auth";
-import { auth } from "../firebase/app";
+    User
+} from 'firebase/auth';
+import { auth } from '../firebase/app';
 
 export const AuthContext = createContext<{
     user: User | undefined;
     authenticate: (provider: AuthProvider) => Promise<void>;
-    handleLogout: () => Promise<void>
-    reloadUser: () => void
+    handleLogout: () => Promise<void>;
+    reloadUser: () => void;
 }>({
     user: undefined,
-    authenticate: async (_) => {},
+    authenticate: async _ => {},
     handleLogout: async () => {},
     reloadUser: () => {}
 });
 
 export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
-    children,
+    children
 }) => {
     const [user, setUser] = useState<User>();
 
-    onAuthStateChanged(auth, (user) => setUser(user || undefined));
+    useEffect(() => {
+        const unsubcribe = onAuthStateChanged(auth, user =>
+            setUser(user || undefined)
+        );
+        return () => unsubcribe();
+    }, []);
 
     const authenticate = async (provider: AuthProvider) => {
         try {
@@ -46,10 +52,10 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     };
     const reloadUser = () => {
         if (auth.currentUser) {
-            setUser(auth.currentUser)
+            setUser(auth.currentUser);
         }
-        console.log(auth.currentUser?.displayName)
-    }
+        console.log(auth.currentUser?.displayName);
+    };
 
     return (
         <AuthContext.Provider

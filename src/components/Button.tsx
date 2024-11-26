@@ -1,5 +1,6 @@
+"use client"
+import Link from "next/link";
 import React from "react";
-import { Link } from "react-router";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>{
     title?: string;
@@ -29,7 +30,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
         classes.push("items-center");
     }
     if (squareSm) {
-        classes.push("square-sm");
+        classes = ["button square-sm"];
     }
     if (green) {
         classes = [green == "right" ? "button-green-right" : "button-green"];
@@ -48,7 +49,7 @@ const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 
     if (link) {
         return (
-            <Link to={link} className={classes.join(" ")}>
+            <Link href={link} className={classes.join(" ")}>
                 {icon}
                 {title}
                 {afterIcon}

@@ -1,3 +1,4 @@
+"use client"
 import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 import { AuthContext } from "../context/auth-context";
 import React, { useContext, useMemo } from "react";
@@ -15,7 +16,7 @@ import {
 } from "react-icons/fa";
 import { FaSquarePlus } from "react-icons/fa6";
 import Dropdown from "./Dropdown";
-import { Link } from "react-router";
+import Link from "next/link";
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -34,7 +35,7 @@ const Header: React.FC = () => {
         const sizeConfig = { size: 27 };
         const routes = [
             {
-                title: import.meta.env.VITE_WEBSITE_TITLE,
+                title: process.env.NEXT_PUBLIC_WEBSITE_TITLE,
                 link: "/",
                 classname: "sites-current",
             },
@@ -61,7 +62,7 @@ const Header: React.FC = () => {
         ];
 
         return routes.map<React.ReactNode>((v, i) => (
-            <Link to={v.link} className={v.classname || ""} key={i}>
+            <Link href={v.link} className={v.classname || ""} key={i}>
                 {v.icon}
                 {v.title}
             </Link>

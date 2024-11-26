@@ -1,11 +1,17 @@
-import React from "react";
+"use client"
+import React from 'react';
 
-export const Panel: React.FC<React.PropsWithChildren<{ title: string }>> = ({
+type PanelProps = React.ComponentProps<'div'> & {
+    title: string;
+};
+
+export const Panel: React.FC<React.PropsWithChildren<PanelProps>> = ({
     title,
     children,
+    className
 }) => {
     return (
-        <div className="panel">
+        <div className={['panel', className].join(' ')}>
             <h2>{title}</h2>
             {children}
         </div>
@@ -16,7 +22,7 @@ export const PanelInset: React.FC<
     React.PropsWithChildren<{ dark?: boolean }>
 > = ({ children, dark }) => {
     return (
-        <div className={dark ? "panel-inset" : "panel-inset-lighter"}>
+        <div className={dark ? 'panel-inset' : 'panel-inset-lighter'}>
             {children}
         </div>
     );

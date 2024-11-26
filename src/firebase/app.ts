@@ -1,4 +1,4 @@
-import { FirebaseOptions, initializeApp } from 'firebase/app'
+import { FirebaseOptions, getApps, initializeApp } from 'firebase/app'
 import { connectAuthEmulator, getAuth } from 'firebase/auth'
 
 const firebaseConfig: FirebaseOptions = {
@@ -12,10 +12,11 @@ const firebaseConfig: FirebaseOptions = {
     measurementId: "G-8JL9EMLMHQ"
 }
 
-const app = initializeApp(firebaseConfig)
+let app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
 const auth = getAuth(app)
 
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV !== "production") {
     connectAuthEmulator(auth, "http://localhost:9099")
 }
 
