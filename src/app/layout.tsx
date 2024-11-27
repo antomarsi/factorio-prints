@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import React from 'react';
-import { Titillium_Web } from 'next/font/google';
-
 import './globals.css';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import { AuthContextProvider } from '@/context/auth-context';
+import { Titillium_Web } from 'next/font/google';
 
-const titilliumWeb = Titillium_Web({
+const titillium_web = Titillium_Web({
+    variable: '--font-titillium-web',
     weight: ['400', '600', '700'],
     subsets: ['latin'],
     display: 'swap'
@@ -25,12 +25,13 @@ export default function RootLayout ({
     children: React.ReactNode;
 }) {
     return (
-        <html lang='en'>
-            <head></head>
-            <body className={titilliumWeb.className}>
+        <html lang='en' className={titillium_web.variable}>
+            <body>
                 <AuthContextProvider>
                     <Header />
-                    <main className='px-4'>{children}</main>
+                    <main className='container'>
+                        <div className='w-[1200px] max-w-full'>{children}</div>
+                    </main>
                     <Footer />
                 </AuthContextProvider>
             </body>

@@ -1,14 +1,21 @@
 'use client';
 import React from 'react';
-import { Panel, PanelInset } from '../components/Panel';
-import Button from '../components/Button';
-import Select from 'react-select';
-import Pagination from '@/app/components/Pagination';
+import { Tabs } from '../components/tabs/index';
+import { Panel } from '../components/Panel';
+import { FaHistory, FaSearch, FaTrophy } from 'react-icons/fa';
+
+const tabItems = [
+    { title: 'Recently updated', icon: <FaHistory /> },
+    { title: 'Most Favorited', icon: <FaTrophy /> },
+    { title: 'Advanced Search', icon: <FaSearch /> }
+];
 
 export default function MostRecentPage () {
     return (
         <>
-            <Panel title='Most Recent'>
+            <Tabs items={tabItems} />
+            <Panel title='Search'></Panel>
+            {/* <Panel title='Search'>
                 <PanelInset dark>
                     <div>
                         <input
@@ -32,7 +39,7 @@ export default function MostRecentPage () {
                         />
                     </div>
                 </PanelInset>
-            </Panel>
+            </Panel> */}
         </>
     );
 }

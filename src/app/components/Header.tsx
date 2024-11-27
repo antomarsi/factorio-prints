@@ -1,22 +1,18 @@
 'use client';
-import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
-import { AuthContext } from "../../context/auth-context";
-import React, { useContext, useMemo } from "react";
+import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
+import { AuthContext } from '../../context/auth-context';
+import React, { useContext, useMemo } from 'react';
 import {
-    FaClock,
     FaCog,
     FaFolder,
     FaGithub,
     FaGoogle,
     FaHeart,
-    FaSearch,
     FaSignOutAlt,
-    FaTrophy,
-    FaUser,
-} from "react-icons/fa";
-import { FaSquarePlus } from "react-icons/fa6";
-import Dropdown from "./Dropdown";
-import Link from "next/link";
+    FaUser
+} from 'react-icons/fa';
+import Dropdown from './Dropdown';
+import Link from 'next/link';
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -25,100 +21,100 @@ const githubProvider = new GithubAuthProvider();
  * Choose between multiple google accounts
  * http://stackoverflow.com/a/40551683/23572
  */
-googleProvider.setCustomParameters({ prompt: "consent select_account" });
-githubProvider.setCustomParameters({ prompt: "consent select_account" });
+googleProvider.setCustomParameters({ prompt: 'consent select_account' });
+githubProvider.setCustomParameters({ prompt: 'consent select_account' });
 
-export default function Header() {
+export default function Header () {
     const { user, authenticate, handleLogout } = useContext(AuthContext);
 
     const links = useMemo(() => {
-        const sizeConfig = { size: 24 };
         const routes = [
             {
                 title: process.env.NEXT_PUBLIC_WEBSITE_TITLE,
-                link: "/",
-                classname: "sites-current",
+                link: '/',
+                classname: 'sites-current'
             },
             {
-                title: "Search",
-                link: "/search",
-                icon: <FaSearch {...sizeConfig} />,
+                title: 'Search',
+                link: '/search',
             },
             {
-                title: "Most Recent",
-                link: "/blueprints",
-                icon: <FaClock {...sizeConfig} />,
+                title: 'Create',
+                link: '/create',
             },
             {
-                title: "Most Favorited",
-                link: "/top-favorites",
-                icon: <FaTrophy {...sizeConfig} />,
+                title: 'Contact',
+                link: '/contact',
             },
             {
-                title: "Create",
-                link: "/create",
-                icon: <FaSquarePlus {...sizeConfig} />,
-            },
+                title: 'Contributors',
+                link: '/contributors',
+            }
         ];
-
-        return routes.map<React.ReactNode>((v, i) => (
-            <Link href={v.link} className={v.classname || ""} key={i}>
-                {v.icon}
+        const separateRoutes = routes.map(v => (
+            <Link href={v.link} className={v.classname || ''}>
                 {v.title}
             </Link>
+        ));
+        const flattedRoutes = separateRoutes
+            .flatMap(x => [<span className='separator blue'>|</span>, x])
+            .slice(1);
+
+        return flattedRoutes.map<React.ReactNode>((v, i) => (
+            <React.Fragment key={i}>{v}</React.Fragment>
         ));
     }, []);
 
     return (
-        <div className="bg-black bg-opacity-50 max-w-full p-4 w-auto top-0 pt-0">
-            <div className="max-w-7xl px-4 m-auto flex flex-wrap top-bar justify-between">
-                <div className="links self-center">{links}</div>
-                <div className="links justify-end header-links mt-1 pt-3 gap-1">
+        <div className='top-bar'>
+            <div className='top-bar-inner'>
+                <div className='sites links flex items-center'>{links}</div>
+                <div className='user-controls links flex items-baseline justify-end'>
                     {user ? (
                         <Dropdown
-                            title={user.displayName || user.email || "Engineer"}
+                            title={user.displayName || user.email || 'Engineer'}
                             img={user.photoURL}
                             icon={<FaUser size={27} />}
                             items={[
                                 {
-                                    title: "My Favorites",
+                                    title: 'My Favorites',
                                     icon: <FaHeart size={16} />,
-                                    link: "/my-favotires",
+                                    link: '/my-favotires'
                                 },
                                 {
-                                    title: "My Blueprints",
+                                    title: 'My Blueprints',
                                     icon: <FaFolder size={16} />,
-                                    link: "/my-blueprints",
+                                    link: '/my-blueprints'
                                 },
                                 {
-                                    title: "My Account",
+                                    title: 'My Account',
                                     icon: <FaCog size={16} />,
-                                    link: "/account",
+                                    link: '/account'
                                 },
                                 {
-                                    title: "Sign out",
+                                    title: 'Sign out',
                                     icon: <FaSignOutAlt size={16} />,
-                                    onClick: handleLogout,
-                                },
+                                    onClick: handleLogout
+                                }
                             ]}
                         />
                     ) : (
                         <Dropdown
-                            title="Log in"
+                            title='Log in'
                             icon={<FaUser size={20} />}
                             items={[
                                 {
-                                    title: "Google",
+                                    title: 'Google',
                                     icon: <FaGoogle size={16} />,
                                     onClick: async () =>
-                                        await authenticate(googleProvider),
+                                        await authenticate(googleProvider)
                                 },
                                 {
-                                    title: "Github",
+                                    title: 'Github',
                                     icon: <FaGithub size={16} />,
                                     onClick: async () =>
-                                        await authenticate(githubProvider),
-                                },
+                                        await authenticate(githubProvider)
+                                }
                             ]}
                         />
                     )}
@@ -126,4 +122,4 @@ export default function Header() {
             </div>
         </div>
     );
-};
+}

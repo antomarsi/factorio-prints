@@ -1,3 +1,3 @@
-import MostRecentPage from "./most-recent/page";
+import MostRecentPage from "./search/page";
 
 export default MostRecentPage;
