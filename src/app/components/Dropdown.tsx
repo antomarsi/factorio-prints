@@ -4,18 +4,12 @@ import { FaChevronDown } from 'react-icons/fa';
 import Button from './Button';
 
 interface DropdownProps {
-    icon?: React.ReactElement;
+    icon?: React.ReactElement,
     title: string;
-    items: {
-        icon?: React.ReactElement;
-        title: string;
-        onClick?: MouseEventHandler<HTMLButtonElement>;
-        link?: string;
-    }[];
     img?: string | null;
 }
 
-export default function Dropdown ({ icon, title, items, img }: DropdownProps) {
+export default function Dropdown ({ title, children, img }: React.PropsWithChildren<DropdownProps>) {
     return (
         <div className='dropdown'>
             <Button
@@ -31,15 +25,7 @@ export default function Dropdown ({ icon, title, items, img }: DropdownProps) {
                 afterIcon={<FaChevronDown className='login-arrow' size={16} />}
             />
             <div className='submenu'>
-                {items.map((v, i) => (
-                    <Button
-                        title={v.title}
-                        key={i}
-                        icon={v.icon}
-                        onClick={v.onClick}
-                        link={v.link}
-                    />
-                ))}
+                {children}
             </div>
         </div>
     );

@@ -7,7 +7,7 @@ import { FaCircleDollarToSlot } from 'react-icons/fa6';
 export default function Footer () {
     const links = useMemo(() => {
         const links = [
-            { title: 'Contact', to: '/contact' },
+            { title: 'About', to: '/about' },
             {
                 title: 'Donate',
                 link: 'https://www.patreon.com/FactorioBlueprints'

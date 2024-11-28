@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { createContext, useEffect, useState } from 'react';
 import {
     AuthProvider,
@@ -54,7 +54,6 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
         if (auth.currentUser) {
             setUser(auth.currentUser);
         }
-        console.log(auth.currentUser?.displayName);
     };
 
     return (

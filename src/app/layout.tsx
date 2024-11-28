@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import React from 'react';
-import './globals.css';
+import '@/styles/global.scss';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import { AuthContextProvider } from '@/context/auth-context';

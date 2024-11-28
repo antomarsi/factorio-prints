@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fa';
 import Dropdown from './Dropdown';
 import Link from 'next/link';
+import Button from './Button';
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -36,19 +37,19 @@ export default function Header () {
             },
             {
                 title: 'Search',
-                link: '/search',
+                link: '/search'
             },
             {
                 title: 'Create',
-                link: '/create',
+                link: '/create'
             },
             {
-                title: 'Contact',
-                link: '/contact',
+                title: 'About',
+                link: '/about'
             },
             {
                 title: 'Contributors',
-                link: '/contributors',
+                link: '/contributors'
             }
         ];
         const separateRoutes = routes.map(v => (
@@ -65,59 +66,82 @@ export default function Header () {
         ));
     }, []);
 
+    const userDropdown = useMemo(() => {
+        if (user) {
+            return (
+                <Dropdown
+                    title={user.displayName || user.email || 'Engineer'}
+                    img={user.photoURL}
+                    icon={<FaUser size={27} />}
+                >
+                    {[
+                        {
+                            title: 'My Favorites',
+                            icon: <FaHeart size={16} />,
+                            link: '/my-favotires'
+                        },
+                        {
+                            title: 'My Blueprints',
+                            icon: <FaFolder size={16} />,
+                            link: '/my-blueprints'
+                        },
+                        {
+                            title: 'My Account',
+                            icon: <FaCog size={16} />,
+                            link: '/account'
+                        },
+                        {
+                            title: 'Sign out',
+                            icon: <FaSignOutAlt size={16} />,
+                            onClick: handleLogout
+                        }
+                    ].map((v, i) => (
+                        <Button
+                            key={i}
+                            title={v.title}
+                            icon={v.icon}
+                            link={v.link}
+                            onClick={v.onClick}
+                        />
+                    ))}
+                </Dropdown>
+            );
+        }
+        return (
+            <Dropdown title='Log in' icon={<FaUser size={20} />}>
+                {[
+                    {
+                        title: 'Google',
+                        icon: <FaGoogle size={16} />,
+                        onClick: async () => {
+                            await authenticate(googleProvider)
+                        }
+                    },
+                    {
+                        title: 'Github',
+                        icon: <FaGithub size={16} />,
+                        onClick: async () => {
+                            await authenticate(githubProvider)
+                        }
+                    }
+                ].map((v, i) => (
+                    <Button
+                        key={i}
+                        title={v.title}
+                        icon={v.icon}
+                        onClick={v.onClick}
+                    />
+                ))}
+            </Dropdown>
+        );
+    }, [user]);
+
     return (
         <div className='top-bar'>
             <div className='top-bar-inner'>
                 <div className='sites links flex items-center'>{links}</div>
                 <div className='user-controls links flex items-baseline justify-end'>
-                    {user ? (
-                        <Dropdown
-                            title={user.displayName || user.email || 'Engineer'}
-                            img={user.photoURL}
-                            icon={<FaUser size={27} />}
-                            items={[
-                                {
-                                    title: 'My Favorites',
-                                    icon: <FaHeart size={16} />,
-                                    link: '/my-favotires'
-                                },
-                                {
-                                    title: 'My Blueprints',
-                                    icon: <FaFolder size={16} />,
-                                    link: '/my-blueprints'
-                                },
-                                {
-                                    title: 'My Account',
-                                    icon: <FaCog size={16} />,
-                                    link: '/account'
-                                },
-                                {
-                                    title: 'Sign out',
-                                    icon: <FaSignOutAlt size={16} />,
-                                    onClick: handleLogout
-                                }
-                            ]}
-                        />
-                    ) : (
-                        <Dropdown
-                            title='Log in'
-                            icon={<FaUser size={20} />}
-                            items={[
-                                {
-                                    title: 'Google',
-                                    icon: <FaGoogle size={16} />,
-                                    onClick: async () =>
-                                        await authenticate(googleProvider)
-                                },
-                                {
-                                    title: 'Github',
-                                    icon: <FaGithub size={16} />,
-                                    onClick: async () =>
-                                        await authenticate(githubProvider)
-                                }
-                            ]}
-                        />
-                    )}
+                    {userDropdown}
                 </div>
             </div>
         </div>

@@ -1,8 +1,9 @@
 'use client';
-import Link from 'next/link';
-import React from 'react';
+import Link, { LinkProps } from 'next/link';
+import React, { AnchorHTMLAttributes } from 'react';
+import { twJoin } from 'tailwind-merge';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = React.ComponentProps<'button'> & AnchorHTMLAttributes<'a'> &{
     title?: string;
     squareSm?: boolean;
     green?: boolean | string;
@@ -11,7 +12,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     dropdownItem?: boolean;
     link?: string;
     active?: boolean;
-}
+    onClick?: any;
+};
 export default function Button ({
     title,
     icon,
@@ -25,43 +27,38 @@ export default function Button ({
     onClick,
     ...props
 }: React.PropsWithChildren<ButtonProps>) {
-    let classes = ['button w-full flex justify-between'];
-    if (!dropdownItem) {
-        classes.push('items-center');
-    }
-    if (squareSm) {
-        classes = ['button square-sm'];
-    }
-    if (green) {
-        classes = [green == 'right' ? 'button-green-right' : 'button-green'];
-        if (icon) {
-            classes.push('flex justify-between');
-        }
-    }
-    if (className) classes.push(className);
-
-    if (props.disabled) {
-        classes.push('disabled');
-    }
-    if (active) {
-        classes.push('active');
-    }
-
-    if (link) {
+    const classes = twJoin(
+        green
+            ? [
+                  green == 'right' ? 'button-green-right' : 'button-green',
+                  icon && 'flex justify-between'
+              ]
+            : squareSm
+            ? 'button suqare-sm'
+            : [
+                  'button w-full flex justify-between',
+                  !dropdownItem && 'items-center'
+              ],
+        className,
+        props.disabled && 'disabled',
+        active && 'active'
+    );
+    if (!link) {
         return (
-            <Link href={link} className={classes.join(' ')}>
+            <button className={classes} onClick={onClick} {...props}>
                 {icon}
                 {title}
                 {afterIcon}
-            </Link>
+            </button>
         );
     }
-
     return (
-        <button onClick={onClick} className={classes.join(' ')} {...props}>
-            {icon}
-            {title}
-            {afterIcon}
-        </button>
+        <Link href={link} target={props.target}>
+            <button className={classes} onClick={onClick} {...props}>
+                {icon}
+                {title}
+                {afterIcon}
+            </button>
+        </Link>
     );
 }
