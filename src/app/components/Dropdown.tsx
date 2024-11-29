@@ -2,6 +2,7 @@
 import React, { MouseEventHandler } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import Button from './Button';
+import Image from 'next/image';
 
 interface DropdownProps {
     icon?: React.ReactElement,
@@ -16,8 +17,9 @@ export default function Dropdown ({ title, children, img }: React.PropsWithChild
                 title={title}
                 icon={
                     img && (
-                        <img
+                        <Image
                             src={img}
+                            alt={title}
                             className='w-6 h-6 rounded-full border-[1px] border-gray-700 border-opacity-50 mr-2'
                         />
                     )

@@ -10,9 +10,12 @@ import {
     FaTrophy
 } from 'react-icons/fa';
 import { FaCircleInfo } from 'react-icons/fa6';
+import Accordion, { AccordionItem } from '../components/Accordion';
+import RadioButtonGroup from '../components/RadioButtonGroup';
+import SearchResult from '../components/Search/SearchResult';
 
 const tabItems = [
-    { title: 'Recently updated', icon: <FaHistory /> },
+    { title: 'Most Recent', icon: <FaHistory /> },
     { title: 'Most Favorited', icon: <FaTrophy /> },
     { title: 'Advanced Search', icon: <FaSearch /> }
 ];
@@ -48,27 +51,19 @@ export default function MostRecentPage () {
                         dark
                         className='mr-3 shrink-0  w-1/5'
                     >
-                        <h2>Sort Order</h2>
                         <h2>Mod</h2>
                         <h2>Tags</h2>
+                        <Accordion title='Belt'>
+                            <AccordionItem />
+                        </Accordion>
                         <h2>Entities</h2>
                         <h2>Recipes</h2>
                         <h2>Versions</h2>
                         <h2>Blueprint type</h2>
                     </PanelInset>
 
-                    <div id='explorer-mainbar' className='w-4/5'>
-                        <div className='flex flex-wrap justify-between mb-2 mt-3 gap-y-2'>
-                            <input
-                                type='text'
-                                className='hidden'
-                                name='sort_attribute'
-                            />
-                            <div>
-                                <FaSortAmountDown />
-                            </div>
-                        </div>
-                    </div>
+                    <SearchResult totalMods={2471} advancedSearch/>
+                    
                 </div>
             </Panel>
             {/* <Panel title='Search'>

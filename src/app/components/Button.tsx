@@ -34,7 +34,7 @@ export default function Button ({
                   icon && 'flex justify-between'
               ]
             : squareSm
-            ? 'button suqare-sm'
+            ? 'button square-sm'
             : [
                   'button w-full flex justify-between',
                   !dropdownItem && 'items-center'

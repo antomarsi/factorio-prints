@@ -14,7 +14,6 @@ interface PaginationProps {
     page: number;
     totalPage: number;
     limit: number;
-    link: string;
     siblings?: number;
 }
 
@@ -22,8 +21,7 @@ export default function Pagination ({
     page,
     totalPage,
     limit,
-    siblings = 1,
-    link
+    siblings = 1
 }: PaginationProps) {
     const paginationValues = useMemo(() => {
         const values = returnPaginationRange(totalPage, page, limit, siblings);
@@ -50,21 +48,10 @@ export default function Pagination ({
                 icon={<FaAngleDoubleLeft size={24} />}
                 disabled={page == 1}
             />
-            <Button
-                squareSm
-                icon={<FaAngleLeft size={24} />}
-                disabled={page == 1}
-            />
             {paginationValues}
             <Button
                 squareSm
                 icon={<FaAngleDoubleRight size={24} />}
-                disabled={page == totalPage}
-            />
-
-            <Button
-                squareSm
-                icon={<FaAngleRight size={24} />}
                 disabled={page == totalPage}
             />
         </>
