@@ -18,6 +18,8 @@ export default function Dropdown ({ title, children, img }: React.PropsWithChild
                 icon={
                     img && (
                         <Image
+                            width={24}
+                            height={24}
                             src={img}
                             alt={title}
                             className='w-6 h-6 rounded-full border-[1px] border-gray-700 border-opacity-50 mr-2'

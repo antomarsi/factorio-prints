@@ -11,7 +11,6 @@ import {
 } from 'react-icons/fa';
 import { FaCircleInfo } from 'react-icons/fa6';
 import Accordion, { AccordionItem } from '../components/Accordion';
-import RadioButtonGroup from '../components/RadioButtonGroup';
 import SearchResult from '../components/Search/SearchResult';
 
 const tabItems = [
@@ -62,7 +61,7 @@ export default function MostRecentPage () {
                         <h2>Blueprint type</h2>
                     </PanelInset>
 
-                    <SearchResult totalMods={2471} advancedSearch/>
+                    <SearchResult totalMods={247} advancedSearch page={1} totalPage={24} />
                     
                 </div>
             </Panel>

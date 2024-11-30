@@ -8,28 +8,36 @@ import SearchItem from './SearchItem';
 type SearchResultProps = {
     totalMods: number;
     advancedSearch?: boolean;
+    limit?: number
+    page: number
+    totalPage: number
 };
 
-export default function SearchResult (props: SearchResultProps) {
+function TopSearchResult ({limit = 20, advancedSearch, totalMods, ...props}:SearchResultProps) {
+    return <div className='flex flex-wrap justify-between mb-2 mt-3 gap-2 items-center'>
+    <input type='text' className='hidden' name='sort_attribute' />
+    {advancedSearch && (
+        <div className='flex items-center gap-2'>
+            <FaSortAmountDown />
+            <SlotButton inline href='' title='Relevance' selected />
+            <SlotButton inline href='' title='Most Recent' />
+            <SlotButton inline href='' title='Most Favorited' />
+        </div>
+    )}
+    <div className='text-[#a6a6a6]'>
+        Found {totalMods} blueprints
+    </div>
+    <div className='text-right flex justify-end ml-auto'>
+        <Pagination limit={limit} {...props}/>
+    </div>
+</div>
+}
+
+export default function SearchResult ({limit=20, ...props}: SearchResultProps) {
+
     return (
         <div id='explorer-mainbar' className='w-4/5'>
-            <div className='flex flex-wrap justify-between mb-2 mt-3 gap-2 items-center'>
-                <input type='text' className='hidden' name='sort_attribute' />
-                {props.advancedSearch && (
-                    <div className='flex items-center gap-2'>
-                        <FaSortAmountDown />
-                        <SlotButton inline href='' title='Relevance' selected />
-                        <SlotButton inline href='' title='Most Recent' />
-                        <SlotButton inline href='' title='Most Favorited' />
-                    </div>
-                )}
-                <div className='text-[#a6a6a6]'>
-                    Found {props.totalMods} blueprints
-                </div>
-                <div className='text-right flex justify-end ml-auto'>
-                    <Pagination limit={20} page={1} totalPage={124} />
-                </div>
-            </div>
+            <TopSearchResult limit={20} {...props}/>
             <div id='blueprint-list'>
                 <SearchItem
                     author={{ name: 'BonnaRe', link: '' }}
@@ -44,6 +52,7 @@ export default function SearchResult (props: SearchResultProps) {
                     link=''
                 />
             </div>
+            <TopSearchResult limit={20} {...props} advancedSearch={false}/>
         </div>
     );
 }

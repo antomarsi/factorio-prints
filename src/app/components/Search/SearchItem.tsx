@@ -48,7 +48,7 @@ export default function SearchItem ({
                         <div className='my-0 mr-3 shrink-0'>
                             <Link href={link} className='block'>
                                 <PanelInset className='blueprint-thumbnail m-0 p-0'>
-                                    <Image
+                                    <img
                                         src={image}
                                         alt={title}
                                         className='max-w-full w-full h-full'
@@ -91,7 +91,7 @@ export default function SearchItem ({
             <PanelInset dark className='m-0 w-full p-1'>
                 <div className='flex justify-between blueprint-tag-view'>
                     <div className='flex flex-wrap blueprint-tags'>
-                        {tags.map(v => <SlotButton inline title={v} />)}
+                        {tags.map((v, i) => <SlotButton inline title={v} key={i}/>)}
                     </div>
                     <div className='text-right flex items-baseline justify-end blueprint-view-section mt-auto'>
                         <div className='mr-3'/>
