@@ -31,7 +31,7 @@ export default function Accordion ({
     title,
     children
 }: PropsWithChildren<AccordionProps>) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
     return (
         <div>

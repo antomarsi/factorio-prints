@@ -51,6 +51,18 @@ export default function SearchResult ({limit=20, ...props}: SearchResultProps) {
                     favorites={123}
                     link=''
                 />
+                <SearchItem
+                    author={{ name: 'BonnaRe', link: '' }}
+                    category='content'
+                    updated_at={new Date("2024-11-14T22:20:29.661054")}
+                    description='Test only - Tortellini Edit...The spidertron is just a minor addition or so they said ... boy, were they wrong. Nearly unkillable, fast as hell and at least twice as deadly ... all hail mega-spidertron! (spidertron-on-ground-zero is just for the epic effect, it will get killed by a nuke)'
+                    image='https://assets-mod.factorio.com/assets/1c80cddc6bb7173efe55260b99a45782a97e6eb6.thumb.png'
+                    tags={['Cheats']}
+                    title='Tortellini - Spidertron - huge grid (44x22)'
+                    version='2.0'
+                    favorites={123}
+                    link=''
+                />
             </div>
             <TopSearchResult limit={20} {...props} advancedSearch={false}/>
         </div>

@@ -18,11 +18,6 @@ export const metadata: Metadata = {
     description:
         'Find blueprints for the video game Factorio. Share your designs. Search the tags for mining, smelting, and advanced production blueprints.'
 };
-
-if (process.env.NEXT_PUBLIC_API_MOCKING == "enabled") {
-    require("../../mocks")
-}
-
 export default function RootLayout ({
     children
 }: {

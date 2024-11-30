@@ -41,13 +41,13 @@ export default function SearchItem ({
     ...props
 }: SearchItemProps) {
     return (
-        <PanelInset className={twJoin(className, "!p-0 !m-0")} {...props}>
+        <PanelInset className={twJoin("p0 !m-0 !py-3", className)} {...props}>
             <div className='flex z-[1]'>
-                <PanelInset className='my-0 w-full mr-[2px]'>
+                <PanelInset className='!my-0 w-full mr-[2px]'>
                     <div className='flex'>
-                        <div className='my-0 mr-3 shrink-0'>
+                        <div className='!my-0 mr-3 shrink-0'>
                             <Link href={link} className='block'>
-                                <PanelInset className='blueprint-thumbnail m-0 p-0'>
+                                <PanelInset className='blueprint-thumbnail p0 !mt-0'>
                                     <img
                                         src={image}
                                         alt={title}
@@ -71,7 +71,7 @@ export default function SearchItem ({
                         </div>
                     </div>
                 </PanelInset>
-                <PanelInset className='m-0 w-[256px]'>
+                <PanelInset className='w-[256px] !m-0'>
                     <div className='!pb-2  flex items-center'>
                         <FaCubes size={20} className='mr-1'/> {category}
                     </div>
@@ -88,7 +88,7 @@ export default function SearchItem ({
                     </div>
                 </PanelInset>
             </div>
-            <PanelInset dark className='m-0 w-full p-1'>
+            <PanelInset dark className='!m-0 w-full p-1'>
                 <div className='flex justify-between blueprint-tag-view'>
                     <div className='flex flex-wrap blueprint-tags'>
                         {tags.map((v, i) => <SlotButton inline title={v} key={i}/>)}
