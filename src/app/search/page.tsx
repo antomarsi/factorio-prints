@@ -1,28 +1,21 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Tabs } from '../components/tabs/index';
 import { Panel, PanelInset } from '../components/Panel';
 import {
-    FaHistory,
-    FaSearch,
-    FaSortAmountDown,
+    FaClockRotateLeft,
+    FaMagnifyingGlass,
     FaSpinner,
-    FaTrophy
-} from 'react-icons/fa';
-import { FaCircleInfo } from 'react-icons/fa6';
-import Accordion, { AccordionItem } from '../components/Accordion';
+    FaTrophy,
+    FaCircleInfo
+} from 'react-icons/fa6';
 import SearchResult from '../components/Search/SearchResult';
-
-const tabItems = [
-    { title: 'Most Recent', icon: <FaHistory /> },
-    { title: 'Most Favorited', icon: <FaTrophy /> },
-    { title: 'Advanced Search', icon: <FaSearch /> }
-];
+import SearchSideBar from '../components/Search/SearchSidebar';
 
 export default function MostRecentPage () {
     return (
         <>
-            <Tabs items={tabItems} />
+            <Tabs/>
             <Panel title='Search'>
                 <PanelInset
                     dark
@@ -40,29 +33,15 @@ export default function MostRecentPage () {
                             <FaSpinner className='animate-spin opacity-0' />
                         </div>
                     </div>
-                    <div className='text-right justify-end cursor-pointer p-2'>
-                        <FaCircleInfo />
-                    </div>
                 </PanelInset>
-                <div id='search-results' className='flex justify-evenly'>
-                    <PanelInset
-                        id='explorer-sidebar'
-                        dark
-                        className='mr-3 shrink-0  w-1/5'
-                    >
-                        <h2>Mod</h2>
-                        <h2>Tags</h2>
-                        <Accordion title='Belt'>
-                            <AccordionItem />
-                        </Accordion>
-                        <h2>Entities</h2>
-                        <h2>Recipes</h2>
-                        <h2>Versions</h2>
-                        <h2>Blueprint type</h2>
-                    </PanelInset>
-
-                    <SearchResult totalMods={247} advancedSearch page={1} totalPage={24} />
-                    
+                <div className='flex justify-evenly'>
+                    <SearchSideBar />
+                    <SearchResult
+                        totalMods={0}
+                        advancedSearch
+                        page={0}
+                        totalPage={0}
+                    />
                 </div>
             </Panel>
         </>

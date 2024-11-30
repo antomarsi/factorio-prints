@@ -1,13 +1,17 @@
 'use client';
 
 import { PropsWithChildren, useState } from 'react';
-import { FaAngleDown, FaAngleUp, FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa6';
 
 type AccordionProps = {
     title: string;
 };
 
-export function AccordionItem () {
+type AccordionItemProps = {
+    title: string;
+};
+
+export function AccordionItem ({ title }: AccordionItemProps) {
     return (
         <div>
             <label className='checkbox-label'>
@@ -17,7 +21,7 @@ export function AccordionItem () {
                     title='Include Tag in search results.'
                 />
                 <div>
-                    <span>Content</span>
+                    <span>{title}</span>
                 </div>
                 <label className='disable-checkbox-label'>
                     <input type='checkbox' />
@@ -32,16 +36,15 @@ export default function Accordion ({
     children
 }: PropsWithChildren<AccordionProps>) {
     const [open, setOpen] = useState(true);
-
+    const toggleOpen = () => setOpen(v => !v)
     return (
-        <div>
-            <div className='flex flex-row justify-between'>
-
-            <label htmlFor='expandCollpase'>
-                {title} {open ? <FaAngleDown /> : <FaAngleUp />}
-            </label>
-            </div>
-            <div className={open ? 'block' : 'hidden'}>{children}</div>
+        <div className='pb-2 ml-2'>
+            <a className='flex flex-row text-primary w-full cursor-pointer hover:no-underline hover:text-primary' onClick={() => setOpen(!open)}>
+                <label htmlFor='expandCollpase' className='font-bold uppercase cursor-pointer'>
+                    {open ? <FaAngleDown size={18}/> : <FaAngleUp size={18}/>} {title}
+                </label>
+            </a>
+            <div className={`ml-2 overflow-hidden transition-[max-height] duration-300 ${open ? "max-h-[1000px]" : "max-h-0"}`}>{children}</div>
         </div>
     );
 }

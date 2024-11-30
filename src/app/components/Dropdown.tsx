@@ -1,6 +1,6 @@
 'use client';
-import React, { MouseEventHandler } from 'react';
-import { FaChevronDown } from 'react-icons/fa';
+import React from 'react';
+import { FaChevronDown } from 'react-icons/fa6';
 import Button from './Button';
 import Image from 'next/image';
 

@@ -1,8 +1,6 @@
 'use client';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { FaDiscord, FaPatreon } from 'react-icons/fa';
-import { FaCircleDollarToSlot } from 'react-icons/fa6';
 
 export default function Footer () {
     const links = useMemo(() => {

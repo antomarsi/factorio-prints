@@ -1,11 +1,9 @@
 'use client';
 import {
-    FaAngleDoubleLeft,
-    FaAngleDoubleRight,
     FaAngleLeft,
     FaAngleRight,
-    FaEllipsisH
-} from 'react-icons/fa';
+    FaEllipsis
+} from 'react-icons/fa6';
 import Button from './Button';
 import { useMemo } from 'react';
 import { returnPaginationRange } from '@/utils/pagination';
@@ -28,7 +26,7 @@ export default function Pagination ({
         return values.map((v, i) => {
             return v === '...' ? (
                 <div key={i} className='square-sm w-[30px] min-w-[30px]'>
-                    <FaEllipsisH size={24} />
+                    <FaEllipsis size={24} />
                 </div>
             ) : (
                 <Button
@@ -39,20 +37,20 @@ export default function Pagination ({
                 />
             );
         });
-    }, [page, totalPage, limit]);
+    }, [page, totalPage, limit, 1]);
 
     return (
         <>
             <Button
                 squareSm
-                icon={<FaAngleDoubleLeft size={24} />}
-                disabled={page == 1}
+                icon={<FaAngleLeft size={24} fontWeight={"600"} />}
+                disabled={page <= 1}
             />
             {paginationValues}
             <Button
                 squareSm
-                icon={<FaAngleDoubleRight size={24} />}
-                disabled={page == totalPage}
+                icon={<FaAngleRight size={24} />}
+                disabled={page >= totalPage}
             />
         </>
     );

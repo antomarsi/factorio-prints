@@ -17,11 +17,11 @@ export const returnPaginationRange = (
     const showRightDots = rightSiblingsIndex < totalPage - 2;
 
     if (!showLeftDots && showRightDots) {
-        const leftItemCount = 3 + 2 * siblings;
+        const leftItemCount = 2 + 2 * siblings;
         const leftRange = range(1, leftItemCount + 1);
         return [...leftRange, '...', totalPage];
     } else if (showLeftDots && !showRightDots) {
-        const rightItemsCount = 3 + 2 * siblings;
+        const rightItemsCount = 2 + 2 * siblings;
         const rightRange = range(
             totalPage - rightItemsCount + 1,
             totalPage + 1

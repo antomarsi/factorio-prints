@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { Panel, PanelInset } from '../../components/Panel';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import SearchItem from '@/app/components/Search/SearchItem';
+import BlueprintCard from '@/app/components/BlueprintCard';
 
 let markdown = `
 ## Getting Started
@@ -21,8 +21,7 @@ Visit [https://nextjs.org/docs](https://nextjs.org/docs) to view the full docume
 `;
 
 export default function UserPage () {
-    const { userId } = useParams();
-    console.log(userId);
+    const { id } = useParams();
 
     return (
         <>
@@ -34,12 +33,12 @@ export default function UserPage () {
                     >
                         <img
                             src={'/imgs/no-avatar.png'}
-                            title={userId?.toString()}
+                            title={id?.toString()}
                         />
                         <div className='shadow-overlay' />
                     </PanelInset>
                     <div className='author-card-content p-4'>
-                        <h2 className='author-card-title'>{userId}</h2>
+                        <h2 className='author-card-title'>{id}</h2>
                         <div className='profile-bio-display'>
                             <Markdown remarkPlugins={[remarkGfm]}>
                                 {markdown}
@@ -48,9 +47,9 @@ export default function UserPage () {
                     </div>
                 </div>
             </Panel>
-            <Panel className='pb-0' title={`Blueprints by ${userId}`}>
+            <Panel className='pb-0' title={`Blueprints by ${id}`}>
                 <div>
-                    <SearchItem
+                    <BlueprintCard
                         author={{ name: 'BonnaRe', link: '' }}
                         category='content'
                         updated_at={new Date('2024-11-14T22:20:29.661054')}
@@ -63,7 +62,7 @@ export default function UserPage () {
                         link=''
                         className='!p-3'
                     />
-                    <SearchItem
+                    <BlueprintCard
                         author={{ name: 'BonnaRe', link: '' }}
                         category='content'
                         updated_at={new Date('2024-11-14T22:20:29.661054')}

@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { Panel, PanelInset } from '../components/Panel';
 import { AuthContext } from '../../context/auth-context';
 import Button from '../components/Button';
-import { FaSave } from 'react-icons/fa';
+import { FaFloppyDisk } from 'react-icons/fa6';
 import { updateProfile } from 'firebase/auth';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -81,7 +81,7 @@ export default function AccountSettingsPage () {
                                 type='submit'
                                 green='right'
                                 title='Save'
-                                icon={<FaSave />}
+                                icon={<FaFloppyDisk />}
                                 disabled={loading}
                             />
                         </div>

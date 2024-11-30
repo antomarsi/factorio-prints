@@ -2,7 +2,7 @@ import Link, { LinkProps } from 'next/link';
 import React from 'react';
 import { twJoin } from 'tailwind-merge';
 
-type SlotButtonProps = {
+type SlotButtonProps = React.ComponentProps<'button'> & {
     inline?: boolean;
     selected?: boolean;
     icon?: React.ReactElement;
@@ -15,11 +15,20 @@ export default function SlotButton ({
     selected,
     icon,
     title,
-    href
+    href,
+    className,
+    disabled,
+    ...props
 }: SlotButtonProps) {
     if (!href) {
         return (
-            <span className='slot-button-inline'>
+            <span
+                className={twJoin(
+                    'slot-button-inline',
+                    className,
+                    disabled && 'disabled'
+                )}
+            >
                 {icon}
                 {title}
             </span>
@@ -29,7 +38,12 @@ export default function SlotButton ({
         return (
             <Link
                 href={href}
-                className={twJoin('slot-button-inline', selected && 'selected')}
+                className={twJoin(
+                    'slot-button-inline',
+                    selected && 'selected',
+                    className,
+                    disabled && 'disabled'
+                )}
             >
                 {icon}
                 {title}
@@ -37,7 +51,11 @@ export default function SlotButton ({
         );
     }
     return (
-        <Link href={href} className='slot' title={title}>
+        <Link
+            href={href}
+            className={twJoin('slot', className, disabled && 'disabled')}
+            title={title}
+        >
             <div className='slot-button'>{icon}</div>
         </Link>
     );

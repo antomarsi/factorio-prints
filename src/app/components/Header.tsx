@@ -3,14 +3,14 @@ import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { AuthContext } from '../../context/auth-context';
 import React, { useContext, useMemo } from 'react';
 import {
-    FaCog,
+    FaGear,
     FaFolder,
     FaGithub,
     FaGoogle,
     FaHeart,
-    FaSignOutAlt,
+    FaRightFromBracket,
     FaUser
-} from 'react-icons/fa';
+} from 'react-icons/fa6';
 import Dropdown from './Dropdown';
 import Link from 'next/link';
 import Button from './Button';
@@ -87,12 +87,12 @@ export default function Header () {
                         },
                         {
                             title: 'My Account',
-                            icon: <FaCog size={16} />,
+                            icon: <FaGear size={16} />,
                             link: '/account'
                         },
                         {
                             title: 'Sign out',
-                            icon: <FaSignOutAlt size={16} />,
+                            icon: <FaRightFromBracket size={16} />,
                             onClick: handleLogout
                         }
                     ].map((v, i) => (
