@@ -65,7 +65,7 @@ export default function SearchItem ({
                                 {" by "}<Link href={author.link} className='font-bold text-orange'>{author.name}</Link>
                             </div>
                             <hr/>
-                            <p className='whitespace-pre-line '>
+                            <p className='whitespace-pre-line line-clamp-4'>
                                 {description}
                             </p>
                         </div>
