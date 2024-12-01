@@ -28,6 +28,7 @@ export default function SlotButton ({
                     className,
                     disabled && 'disabled'
                 )}
+                {...props}
             >
                 {icon}
                 {title}

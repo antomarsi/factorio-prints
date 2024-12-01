@@ -46,10 +46,10 @@
                 },
                 {
                     "tagCategory": "version",
-                    "tagName": "2,0",
+                    "tagName": "2.0",
                     "tag": {
                         "category": "version",
-                        "name": "2,0"
+                        "name": "2.0"
                     }
                 }
             ]
@@ -248,10 +248,10 @@
                 },
                 {
                     "tagCategory": "version",
-                    "tagName": "2,0",
+                    "tagName": "2.0",
                     "tag": {
                         "category": "version",
-                        "name": "2,0"
+                        "name": "2.0"
                     }
                 }
             ]

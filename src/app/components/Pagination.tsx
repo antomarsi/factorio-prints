@@ -1,12 +1,9 @@
 'use client';
-import {
-    FaAngleLeft,
-    FaAngleRight,
-    FaEllipsis
-} from 'react-icons/fa6';
+import { FaAngleLeft, FaAngleRight, FaEllipsis } from 'react-icons/fa6';
 import Button from './Button';
 import { useMemo } from 'react';
 import { returnPaginationRange } from '@/utils/pagination';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface PaginationProps {
     page: number;
@@ -21,6 +18,16 @@ export default function Pagination ({
     limit,
     siblings = 1
 }: PaginationProps) {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+
+    const onCLick = (page: number) => {
+        const params = new URLSearchParams(searchParams);
+        params.set('page', page.toString());
+        replace(`${pathname}?${params.toString()}`);
+    };
+
     const paginationValues = useMemo(() => {
         const values = returnPaginationRange(totalPage, page, limit, siblings);
         return values.map((v, i) => {
@@ -32,8 +39,10 @@ export default function Pagination ({
                 <Button
                     key={i}
                     squareSm
+                    type='button'
                     title={v.toString()}
                     active={v == page}
+                    onClick={() => onCLick(v as number)}
                 />
             );
         });
@@ -43,14 +52,18 @@ export default function Pagination ({
         <>
             <Button
                 squareSm
-                icon={<FaAngleLeft size={24} fontWeight={"600"} />}
+                type='button'
+                icon={<FaAngleLeft size={24} fontWeight={'600'} />}
                 disabled={page <= 1}
+                onClick={() => onCLick(page - 1)}
             />
             {paginationValues}
             <Button
                 squareSm
+                type='button'
                 icon={<FaAngleRight size={24} />}
                 disabled={page >= totalPage}
+                onClick={() => onCLick(page + 1)}
             />
         </>
     );

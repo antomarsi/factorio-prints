@@ -1,48 +1,37 @@
-'use client';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Tabs } from '../components/tabs/index';
-import { Panel, PanelInset } from '../components/Panel';
-import {
-    FaClockRotateLeft,
-    FaMagnifyingGlass,
-    FaSpinner,
-    FaTrophy,
-    FaCircleInfo
-} from 'react-icons/fa6';
+import { Panel } from '../components/Panel';
 import SearchResult from '../components/Search/SearchResult';
-import SearchSideBar from '../components/Search/SearchSidebar';
+import Search from '../components/Search';
+import { searchBlueprints } from '@/lib/api';
+import { BlueprintCardProps } from '../components/BlueprintCard';
 
-export default function MostRecentPage () {
+type SearchParams = {
+    searchParams: Promise<{
+        searchTerm?: string;
+        tags?: string[];
+        ignoredTags?: string[];
+        sort?: string;
+        page?: string;
+    }>;
+};
+
+export default async function MostRecentPage ({ searchParams }: SearchParams) {
+    
+    const {totalBlueprints, page, totalPage, items} = await searchBlueprints(await searchParams)
     return (
         <>
-            <Tabs/>
+            <Tabs />
             <Panel title='Search'>
-                <PanelInset
-                    dark
-                    className='flex p-1 flex-wrap items-center justify-between mb-0'
-                >
-                    <div className='flex flex-wrap items-center grow'>
-                        <div className='shrink-0 grow'>
-                            <input
-                                placeholder='Search title...'
-                                type='text'
-                                className='f-input w-full'
-                            />
-                        </div>
-                        <div className='mx-4'>
-                            <FaSpinner className='animate-spin opacity-0' />
-                        </div>
-                    </div>
-                </PanelInset>
-                <div className='flex justify-evenly'>
-                    <SearchSideBar />
+                <Search>
                     <SearchResult
-                        totalMods={0}
+                        totalBlueprints={totalBlueprints}
                         advancedSearch
-                        page={0}
-                        totalPage={0}
+                        items={items as BlueprintCardProps[]}
+                        page={page}
+                        totalPage={totalPage}
                     />
-                </div>
+                </Search>
             </Panel>
         </>
     );

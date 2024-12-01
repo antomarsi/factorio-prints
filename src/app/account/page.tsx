@@ -16,9 +16,8 @@ export default function AccountSettingsPage () {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors, isLoading, isDirty }
     } = useForm<IFormInput>();
-    const [loading, setLoading] = useState(false);
 
     if (!user) {
         return (
@@ -38,12 +37,10 @@ export default function AccountSettingsPage () {
             if (!data.displayName) {
                 throw new Error('Must be a valid username');
             }
-            setLoading(true);
             await updateProfile(user, {
                 displayName: data.displayName
             });
             reloadUser();
-            setLoading(false);
         }
     };
 
@@ -82,7 +79,7 @@ export default function AccountSettingsPage () {
                                 green='right'
                                 title='Save'
                                 icon={<FaFloppyDisk />}
-                                disabled={loading}
+                                disabled={isLoading && isDirty}
                             />
                         </div>
                     </form>

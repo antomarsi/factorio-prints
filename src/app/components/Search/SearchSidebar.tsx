@@ -1,3 +1,4 @@
+import { UseFormRegister } from 'react-hook-form';
 import Accordion, { AccordionItem } from '../Accordion';
 import { PanelInset } from '../Panel';
 import tags from '@/assets/tags.json';
@@ -11,7 +12,7 @@ export default function SearchSideBar () {
             {Object.entries(tags).map(([key, value]) => (
                 <Accordion title={key} key={key}>
                     {value.map(v => (
-                        <AccordionItem title={v} key={v} />
+                        <AccordionItem title={v} key={v} value={v} id="tags" ignoreId='ignoredTags'/>
                     ))}
                 </Accordion>
             ))}

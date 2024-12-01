@@ -20,7 +20,7 @@ export type BlueprintCardProps = {
     title: string;
     author: {
         name: string;
-        link: string;
+        id: string;
     };
     description: string;
     updated_at: Date;
@@ -28,7 +28,7 @@ export type BlueprintCardProps = {
     tags: string[];
     category: string;
     favorites: number;
-    link: string;
+    id: string;
 };
 
 export default function BlueprintCard ({
@@ -41,17 +41,18 @@ export default function BlueprintCard ({
     tags,
     category,
     favorites,
-    link,
+    id,
     className,
     ...props
 }: BlueprintCardProps & React.ComponentProps<'div'>) {
+    
     return (
         <PanelInset className={twJoin('p0 !m-0 !py-3', className)} {...props}>
             <div className='flex z-[1]'>
                 <PanelInset className='!my-0 w-full mr-[2px]'>
                     <div className='flex'>
                         <div className='!my-0 mr-3 shrink-0'>
-                            <Link href={link} className='block'>
+                            <Link href={`/blueprint/${id}`} className='block'>
                                 <PanelInset className='blueprint-thumbnail p0 !mt-0'>
                                     <img
                                         src={image}
@@ -64,14 +65,14 @@ export default function BlueprintCard ({
                         </div>
                         <div className='w-full'>
                             <h2 className='mb-0'>
-                                <Link href={link} className='text-primary'>
+                                <Link href={`/blueprint/${id}`} className='text-primary'>
                                     {title}
                                 </Link>
                             </h2>
                             <div>
                                 {' by '}
                                 <Link
-                                    href={author.link}
+                                    href={`user/${author.id}`}
                                     className='font-bold text-orange'
                                 >
                                     {author.name}
@@ -91,10 +92,10 @@ export default function BlueprintCard ({
                     <div className='mod-card-info'>
                         <div
                             className='pb-2 flex items-center'
-                            title={format(updated_at, 'P')}
+                            title={format(new Date(updated_at), 'P')}
                         >
                             <FaClockRotateLeft size={20} className='mr-1' />
-                            {formatDistance(updated_at, new Date(), {
+                            {formatDistance(new Date(updated_at), new Date(), {
                                 addSuffix: true
                             })}
                         </div>
@@ -116,7 +117,7 @@ export default function BlueprintCard ({
             </div>
             <PanelInset dark className='!m-0 w-full p-1'>
                 <div className='flex justify-between blueprint-tag-view'>
-                    <div className='flex flex-wrap blueprint-tags'>
+                    <div className='flex flex-wrap blueprint-tags max-w-[600px] gap-1'>
                         {tags.map((v, i) => (
                             <SlotButton inline title={v} key={i} />
                         ))}
