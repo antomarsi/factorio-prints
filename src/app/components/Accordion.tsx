@@ -1,8 +1,9 @@
 'use client';
 
-import { PropsWithChildren, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { PropsWithChildren, useMemo, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa6';
+import { twJoin } from 'tailwind-merge';
 
 type AccordionProps = {
     title: string;
@@ -21,23 +22,31 @@ export function AccordionItem ({
     value,
     ignoreId
 }: AccordionItemProps) {
-    const { register } = useFormContext();
+    const { register, control } = useFormContext();
+    const formatedValue = value.replace('.', '-');
+    const watch = useWatch({ control, name: `${ignoreId}.${formatedValue}` });
+
     return (
         <div>
             <label className='checkbox-label'>
-                <input type='checkbox' {...register(id)} value={value} />
+                <input
+                    type='checkbox'
+                    {...register(`${id}.${formatedValue}`, { disabled: watch })}
+                    className={twJoin(watch && "opacity-0")}
+                />
                 <div
-                    className='checkbox'
+                    className={twJoin('checkbox', watch && 'disabled')}
                     title='Include Tag in search results.'
                 />
                 <div>
-                    <span>{title}</span>
+                    <span className={twJoin(watch && 'disabled-label')}>
+                        {title}
+                    </span>
                 </div>
                 <label className='disable-checkbox-label'>
                     <input
                         type='checkbox'
-                        {...register(ignoreId)}
-                        value={value}
+                        {...register(`${ignoreId}.${formatedValue}`)}
                     />
                 </label>
             </label>

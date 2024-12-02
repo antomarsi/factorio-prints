@@ -23,16 +23,15 @@ Visit [https://nextjs.org/docs](https://nextjs.org/docs) to view the full docume
 
 export default function BlueprintPage () {
     const tabsItems = [
-        { title: 'Entities'},
-    { title: 'Recipes' },
-    { title: 'Blueprint Titles' }
-    ]
+        { title: 'Entities' },
+        { title: 'Recipes' },
+        { title: 'Blueprint Titles' }
+    ];
     return (
         <>
-            <Tabs items={tabsItems}/>
             <Panel>
                 <BlueprintCard
-                    author={{ name: 'BonnaRe', link: '' }}
+                    author={{ name: 'BonnaRe', id: '1234' }}
                     category='content'
                     updated_at={new Date('2024-11-14T22:20:29.661054')}
                     description='Test only - Tortellini Edit...The spidertron is just a minor addition or so they said ... boy, were they wrong. Nearly unkillable, fast as hell and at least twice as deadly ... all hail mega-spidertron! (spidertron-on-ground-zero is just for the epic effect, it will get killed by a nuke)'
@@ -41,9 +40,10 @@ export default function BlueprintPage () {
                     title='Tortellini - Spidertron - huge grid (44x22)'
                     version='2.0'
                     favorites={123}
-                    link=''
+                    id=''
                     className='!p-3'
                 />
+
                 <PanelInset className='mb-0'>
                     <div className='blueprint-page-info'>
                         <div className='flex'>
@@ -75,7 +75,7 @@ export default function BlueprintPage () {
                             </dl>
                         </div>
                         <article className='panel-hole-combined'>
-                        <Markdown remarkPlugins={[remarkGfm]}>
+                            <Markdown remarkPlugins={[remarkGfm]}>
                                 {markdown}
                             </Markdown>
                         </article>

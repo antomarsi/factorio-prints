@@ -13,7 +13,6 @@ export const returnPaginationRange = (
     }
     const leftSiblingsIndex = Math.max(page - siblings, 1);
     const rightSiblingsIndex = Math.min(page + siblings, totalPage);
-    console.log(rightSiblingsIndex)
 
     const showLeftDots = leftSiblingsIndex > 2;
     const showRightDots = rightSiblingsIndex < totalPage - 2;
@@ -31,7 +30,6 @@ export const returnPaginationRange = (
         return [1, '...', ...rightRange];
     } else {
         const middleRange = range(leftSiblingsIndex, rightSiblingsIndex + 1);
-        console.log(middleRange)
         return [1, '...', ...middleRange, '...', totalPage];
     }
 };

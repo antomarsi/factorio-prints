@@ -902,12 +902,12 @@
             0px 0px 4px 1px #2e2521;
     }
 
-    .checkbox-label input:checked ~ .checkbox {
+    .checkbox-label input:checked ~ .checkbox:not(.disabled) {
         background: #e39827;
     }
 
-    .checkbox-label input:checked ~ .checkbox:active,
-    .checkbox-label input:checked ~ .checkbox.active {
+    .checkbox-label input:checked ~ .checkbox:active:not(.disabled),
+    .checkbox-label input:checked ~ .checkbox.active:not(.disabled) {
         background: #f3c98e;
     }
 

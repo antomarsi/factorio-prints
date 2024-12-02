@@ -47,7 +47,7 @@ app.get('/api/blueprints', (req, res) => {
     paginatedData = paginatedData.map(v => {
       return{image: buildImageUrl(v.imgurImage.imgurId, v.imgurImage.imgurType),...v }
     })
-    res.json({totalTada: filteredDatabase.length ,page, totalPage: Math.ceil(filteredDatabase.length / limit), data: paginatedData})
+    res.json({total: filteredDatabase.length, page, totalPage: Math.ceil(filteredDatabase.length / limit), data: paginatedData})
 });
 app.get('/api/blueprint/:id', (req, res) => {
   let blueprint = db.database.find((v) => v.key == req.params.id)

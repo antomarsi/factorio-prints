@@ -9,8 +9,8 @@ import { BlueprintCardProps } from '../components/BlueprintCard';
 type SearchParams = {
     searchParams: Promise<{
         searchTerm?: string;
-        tags?: string[];
-        ignoredTags?: string[];
+        tags?: string[] | string;
+        ignoredTags?: string[] | string;
         sort?: string;
         page?: string;
     }>;
@@ -22,7 +22,7 @@ export default async function MostRecentPage ({ searchParams }: SearchParams) {
     return (
         <>
             <Tabs />
-            <Panel title='Search'>
+            <Panel title='Search' className='pb-0'>
                 <Search>
                     <SearchResult
                         totalBlueprints={totalBlueprints}

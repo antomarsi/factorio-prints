@@ -18,20 +18,28 @@ interface IBlueprint {
 
 export const searchBlueprints = async (params: {
     searchTerm?: string;
-    tags?: string[];
-    ignoredTags?: string[];
+    tags?: string[] | string;
+    ignoredTags?: string[] | string;
     sort?: string;
     page?: string;
 }): Promise<{ totalBlueprints: number, page: number, totalPage: number, items: IBlueprint[] }> => {
     const { tags, ignoredTags, ...otherParams } = params
     const searchParams = new URLSearchParams(otherParams)
-    tags?.forEach(v => searchParams.append("tags", v))
-    ignoredTags?.forEach(v => searchParams.append("ignoreTags", v))
+    if (Array.isArray(tags)) {
+        tags.forEach(v => searchParams.append("tags", v))
+    } else if (tags !== undefined) {
+        searchParams.append("tags", tags)
+    }
+    if (Array.isArray(ignoredTags)) {
+        ignoredTags.forEach(v => searchParams.append("ignoredTags", v))
+    } else if (ignoredTags !== undefined) {
+        searchParams.append("ignoredTags", ignoredTags)
+    }
     const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprints`)
     url.search = searchParams.toString()
 
     const response = await fetch(url)
-    const { totalBlueprints, data, page, totalPage } = await response.json()
+    const { total, data, page, totalPage } = await response.json()
 
     const parsedData = data.map((v: any) => ({
         id: v.key,
@@ -49,5 +57,5 @@ export const searchBlueprints = async (params: {
         version: "2.0.0"
     }))
 
-    return { totalBlueprints, items: parsedData, page: +page, totalPage }
+    return { totalBlueprints: total, items: parsedData, page: +page, totalPage }
 }

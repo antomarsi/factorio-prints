@@ -8,7 +8,6 @@ import BlueprintCard, {
     BlueprintCardProps,
     SkeletonBlueprintCard
 } from '../BlueprintCard';
-import { useFormContext } from 'react-hook-form';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 type TopSearchResultProps = {
@@ -84,7 +83,7 @@ function TopSearchResult ({
             <div className='text-[#a6a6a6]'>
                 Found {totalBlueprints} results
             </div>
-            <div className='text-right flex justify-end ml-auto'>
+            <div className='text-right flex justify-end ml-auto mr-3'>
                 <Pagination limit={limit} {...props} />
             </div>
         </div>
@@ -118,12 +117,12 @@ export default function SearchResult ({
         <div id='explorer-mainbar' className='w-3/4'>
             <Suspense fallback={suspenseTopSearch}>
                 <TopSearchResult
-                    limit={20}
                     {...props}
+                    limit={20}
                     disabled={items.length == 0}
                 />
             </Suspense>
-            <div id='blueprint-list'>
+            <div id='blueprint-list' className='mr-3'>
                 <Suspense fallback={loadingItems}>{resultItems}</Suspense>
             </div>
             <Suspense>

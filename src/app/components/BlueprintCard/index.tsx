@@ -72,7 +72,7 @@ export default function BlueprintCard ({
                             <div>
                                 {' by '}
                                 <Link
-                                    href={`user/${author.id}`}
+                                    href={`/user/${author.id}`}
                                     className='font-bold text-orange'
                                 >
                                     {author.name}
