@@ -37,7 +37,6 @@ export default function Search ({ children }: PropsWithChildren) {
     });
 
     const onSubmit: SubmitHandler<ISearchForm> = async data => {
-        console.log(data);
         const params = new URLSearchParams();
         data.sort ? params.set('sort', data.sort) : params.delete('sort');
         data.page ? params.set('page', data.page) : params.delete('page');
@@ -48,7 +47,6 @@ export default function Search ({ children }: PropsWithChildren) {
         const ignoredTags = Object.entries(data.ignoredTags)
             .filter(([k, v]) => v)
             .map(([k, v]) => k);
-        console.log(ignoredTags)
 
         ignoredTags.length > 0
             ? ignoredTags.forEach(v => params.append('ignoredTags', v))
@@ -57,7 +55,6 @@ export default function Search ({ children }: PropsWithChildren) {
         const tags = Object.entries(data.tags)
             .filter(([k, v]) => v && !ignoredTags.includes(k))
             .map(([k, v]) => k);
-        console.log(tags)
 
         tags.length > 0
             ? tags.forEach(v => params.append('tags', v))

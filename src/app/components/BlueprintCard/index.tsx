@@ -18,7 +18,7 @@ import Button from '../Button';
 export type BlueprintCardProps = {
     image: string;
     title: string;
-    author: {
+    author?: {
         name: string;
         id: string;
     };
@@ -45,7 +45,6 @@ export default function BlueprintCard ({
     className,
     ...props
 }: BlueprintCardProps & React.ComponentProps<'div'>) {
-    
     return (
         <PanelInset className={twJoin('p0 !m-0 !py-3', className)} {...props}>
             <div className='flex z-[1]'>
@@ -64,24 +63,31 @@ export default function BlueprintCard ({
                             </Link>
                         </div>
                         <div className='w-full'>
-                            <h2 className='mb-0'>
-                                <Link href={`/blueprint/${id}`} className='text-primary'>
-                                    {title}
-                                </Link>
-                            </h2>
-                            <div>
-                                {' by '}
-                                <Link
-                                    href={`/user/${author.id}`}
-                                    className='font-bold text-orange'
-                                >
-                                    {author.name}
-                                </Link>
-                            </div>
-                            <hr />
-                            <p className='line-clamp-4 whitespace-pre-line text-ellipsis'>
-                                {description}
-                            </p>
+                            {author && (
+                                <>
+                                    <h2 className='mb-0'>
+                                        <Link
+                                            href={`/blueprint/${id}`}
+                                            className='text-primary'
+                                        >
+                                            {title}
+                                        </Link>
+                                    </h2>
+                                    <div>
+                                        {' by '}
+                                        <Link
+                                            href={`/user/${author.id}`}
+                                            className='font-bold text-orange'
+                                        >
+                                            {author.name}
+                                        </Link>
+                                    </div>
+                                    <hr />
+                                    <p className='line-clamp-4 whitespace-pre-line text-ellipsis'>
+                                        {description}
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
                 </PanelInset>
@@ -140,8 +146,6 @@ export default function BlueprintCard ({
     );
 }
 
-
-
 type SkeletonBlueprintCardProps = React.ComponentProps<'div'>;
 
 export function SkeletonBlueprintCard ({
@@ -149,47 +153,57 @@ export function SkeletonBlueprintCard ({
     ...props
 }: SkeletonBlueprintCardProps) {
     return (
-        <PanelInset className={twJoin("p0 !m-0 !py-3", className, "animate-pulse")} {...props}>
+        <PanelInset
+            className={twJoin('p0 !m-0 !py-3', className, 'animate-pulse')}
+            {...props}
+        >
             <div className='flex z-[1]'>
                 <PanelInset className='!my-0 w-full mr-[2px]'>
                     <div className='flex'>
                         <div className='!my-0 mr-3 shrink-0'>
                             <div className='block'>
                                 <PanelInset className='blueprint-thumbnail p0 !mt-0'>
-                                    <div className='max-w-full w-full h-full bg-zinc-800'/>
-                                    <div className='shadow-overlay'/>
+                                    <div className='max-w-full w-full h-full bg-zinc-800' />
+                                    <div className='shadow-overlay' />
                                 </PanelInset>
                             </div>
                         </div>
                         <div className='w-full'>
                             <h2 className='mb-0'>
-                                <div className='h-5 w-full max-w-72 rounded bg-zinc-800'/>
+                                <div className='h-5 w-full max-w-72 rounded bg-zinc-800' />
                             </h2>
-                            <div className='h-4 mt-1 w-full max-w-32 rounded bg-zinc-800'/>
-                            <hr/>
-                            <div className='h-full w-full max-h-[74px] rounded bg-zinc-800'/>
+                            <div className='h-4 mt-1 w-full max-w-32 rounded bg-zinc-800' />
+                            <hr />
+                            <div className='h-full w-full max-h-[74px] rounded bg-zinc-800' />
                         </div>
                     </div>
                 </PanelInset>
                 <PanelInset className='w-[256px] !m-0'>
                     <div className='!pb-2  flex items-center'>
-                        <FaCubes size={20} className='mr-1'/> <div className='h-5 rounded bg-zinc-800 w-full'/>
+                        <FaCubes size={20} className='mr-1' />{' '}
+                        <div className='h-5 rounded bg-zinc-800 w-full' />
                     </div>
                     <div className='mod-card-info'>
                         <div className='pb-2 flex items-center'>
-                            <FaClockRotateLeft size={20} className='mr-1'/><div className='h-5 rounded bg-zinc-800 w-full'/>
+                            <FaClockRotateLeft size={20} className='mr-1' />
+                            <div className='h-5 rounded bg-zinc-800 w-full' />
                         </div>
                         <div className='pb-2 flex items-center'>
-                            <FaGear size={20} className='mr-1'/><div className='h-5 rounded bg-zinc-800 w-full'/>
+                            <FaGear size={20} className='mr-1' />
+                            <div className='h-5 rounded bg-zinc-800 w-full' />
                         </div>
-                        <div className='pb-2 flex items-center' title="Favorites">
-                            <FaHeart size={20} className='mr-1'/><div className='h-5 rounded bg-zinc-800 w-full'/>
+                        <div
+                            className='pb-2 flex items-center'
+                            title='Favorites'
+                        >
+                            <FaHeart size={20} className='mr-1' />
+                            <div className='h-5 rounded bg-zinc-800 w-full' />
                         </div>
                     </div>
                 </PanelInset>
             </div>
             <PanelInset dark className='!m-0 w-full p-1'>
-                        <div className='h-9 rounded bg-zinc-800 w-full'/>
+                <div className='h-9 rounded bg-zinc-800 w-full' />
             </PanelInset>
         </PanelInset>
     );

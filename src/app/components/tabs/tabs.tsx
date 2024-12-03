@@ -5,24 +5,30 @@ import {
     FaMagnifyingGlass,
     FaTrophy
 } from 'react-icons/fa6';
+import { twJoin } from 'tailwind-merge';
 
 type TabsProps = React.PropsWithChildren & {
-    items?: { title: string; icon?: React.ReactNode }[];
+    items: { title: string; icon?: React.ReactNode; active?: boolean }[];
+    header?: boolean;
 };
 
-const tabs = [
-    { title: 'Most Recent', icon: <FaClockRotateLeft /> },
-    { title: 'Most Favorited', icon: <FaTrophy /> },
-    { title: 'Advanced Search', icon: <FaMagnifyingGlass /> }
-];
-
-function Tabs ({ children, items = tabs }: TabsProps) {
+function Tabs ({ children, items, header }: TabsProps) {
     return (
         <div>
-            <ul className='tabs tabs-for-panel tabs-header justify-end'>
+            <ul
+                className={twJoin(
+                    'tabs',
+                    header && 'tabs-for-panel tabs-header justify-end'
+                )}
+            >
                 {items.map((v, i) => (
                     <li key={i}>
-                        <a className={i == 2 ? 'active flex' : 'flex flex-row'}>
+                        <a
+                            className={twJoin(
+                                v.active && 'active',
+                                header && (v.active ? 'flex' : 'flex flex-row')
+                            )}
+                        >
                             {v.icon}
                             {v.title}
                         </a>

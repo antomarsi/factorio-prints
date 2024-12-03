@@ -1,6 +1,6 @@
 
 
-interface IBlueprint {
+export interface IBlueprint {
     id: string;
     image: string;
     title: string;
@@ -14,6 +14,24 @@ interface IBlueprint {
     tags: string[];
     category: string;
     favorites: number;
+}
+
+const parseApiData = (v: any) => {
+    return {
+        id: v.key,
+        title: v.title,
+        image: v.image,
+        description: v.descriptionMarkdown,
+        tags: v.tags.map((t: any) => `${t.tagCategory}/${t.tagName}`),
+        author: {
+            name: v.author.displayName,
+            id: v.author.userId
+        },
+        updated_at: new Date(v.version.createdOn),
+        category: "Blueprint",
+        favorites: v.voteSummary.numberOfUpvotes,
+        version: "2.0.0"
+    }
 }
 
 export const searchBlueprints = async (params: {
@@ -41,21 +59,21 @@ export const searchBlueprints = async (params: {
     const response = await fetch(url)
     const { total, data, page, totalPage } = await response.json()
 
-    const parsedData = data.map((v: any) => ({
-        id: v.key,
-        title: v.title,
-        image: v.image,
-        description: v.descriptionMarkdown,
-        tags: v.tags.map((t: any) => `${t.tagCategory}/${t.tagName}`),
-        author: {
-            name: v.author.displayName,
-            id: v.author.userId
-        },
-        updated_at: new Date(v.version.createdOn),
-        category: "Blueprint",
-        favorites: v.voteSummary.numberOfUpvotes,
-        version: "2.0.0"
-    }))
+    const parsedData = data.map((v: any) => parseApiData(v))
 
     return { totalBlueprints: total, items: parsedData, page: +page, totalPage }
+}
+
+export const searchUser = async (userId: String): Promise<any> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/user/${userId}`)
+    const result = await fetch(url)
+    const data = await result.json()
+    return data
+}
+
+export const searchBlueprint = async (userId: String): Promise<IBlueprint> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprint/${userId}`)
+    const result = await fetch(url)
+    const data = await result.json()
+    return parseApiData(data)
 }

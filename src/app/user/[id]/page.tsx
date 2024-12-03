@@ -1,27 +1,22 @@
 'use client';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Panel, PanelInset } from '../../components/Panel';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import BlueprintCard from '@/app/components/BlueprintCard';
+import { searchUser } from '@/lib/api';
 
-let markdown = `
-## Getting Started
+type userParams = {
+    id: string
+}
 
-Used by some of the world's largest companies, Next.js enables you to create full-stack web applications by extending the latest React features, and integrating powerful Rust-based JavaScript tooling for the fastest builds.
-
-- Visit our [Learn Next.js](https://nextjs.org/learn) course to get started with Next.js.
-- Visit the [Next.js Showcase](https://nextjs.org/showcase) to see more sites built with Next.js.
-
-## Documentation
-
-Visit [https://nextjs.org/docs](https://nextjs.org/docs) to view the full documentation.
-
-## Community
-`;
-
-export default function UserPage () {
-    const { id } = useParams();
+export default async function UserPage ({params}: {params: Promise<userParams>}) {
+    const data = await searchUser((await params).id)
+    console.log(data)
+    const {id, markdown}  = {
+        id: "123",
+        markdown: ""
+    }
 
     return (
         <>
@@ -50,7 +45,7 @@ export default function UserPage () {
             <Panel className='pb-0' title={`Blueprints by ${id}`}>
                 <div>
                     <BlueprintCard
-                        author={{ name: 'BonnaRe', link: '' }}
+                        author={{ name: 'BonnaRe', id: '' }}
                         category='content'
                         updated_at={new Date('2024-11-14T22:20:29.661054')}
                         description='Test only - Tortellini Edit...The spidertron is just a minor addition or so they said ... boy, were they wrong. Nearly unkillable, fast as hell and at least twice as deadly ... all hail mega-spidertron! (spidertron-on-ground-zero is just for the epic effect, it will get killed by a nuke)'
@@ -59,11 +54,11 @@ export default function UserPage () {
                         title='Tortellini - Spidertron - huge grid (44x22)'
                         version='2.0'
                         favorites={123}
-                        link=''
+                        id=''
                         className='!p-3'
                     />
                     <BlueprintCard
-                        author={{ name: 'BonnaRe', link: '' }}
+                        author={{ name: 'BonnaRe', id: '' }}
                         category='content'
                         updated_at={new Date('2024-11-14T22:20:29.661054')}
                         description='Test only - Tortellini Edit...The spidertron is just a minor addition or so they said ... boy, were they wrong. Nearly unkillable, fast as hell and at least twice as deadly ... all hail mega-spidertron! (spidertron-on-ground-zero is just for the epic effect, it will get killed by a nuke)'
@@ -72,7 +67,7 @@ export default function UserPage () {
                         title='Tortellini - Spidertron - huge grid (44x22)'
                         version='2.0'
                         favorites={123}
-                        link=''
+                        id=''
                         className='!p-3'
                     />
                 </div>

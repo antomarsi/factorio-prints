@@ -1,16 +1,20 @@
 'use client';
-import React from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 import { FaChevronDown } from 'react-icons/fa6';
 import Button from './Button';
 import Image from 'next/image';
 
 interface DropdownProps {
-    icon?: React.ReactElement,
+    icon?: ReactNode;
     title: string;
     img?: string | null;
 }
 
-export default function Dropdown ({ title, children, img }: React.PropsWithChildren<DropdownProps>) {
+export default function Dropdown ({
+    title,
+    children,
+    img
+}: PropsWithChildren<DropdownProps>) {
     return (
         <div className='dropdown'>
             <Button
@@ -28,9 +32,7 @@ export default function Dropdown ({ title, children, img }: React.PropsWithChild
                 }
                 afterIcon={<FaChevronDown className='login-arrow' size={16} />}
             />
-            <div className='submenu'>
-                {children}
-            </div>
+            <div className='submenu'>{children}</div>
         </div>
     );
 }

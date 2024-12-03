@@ -1,11 +1,11 @@
-import Link, { LinkProps } from 'next/link';
-import React from 'react';
+import Link from 'next/link';
+import React, { ReactNode } from 'react';
 import { twJoin } from 'tailwind-merge';
 
 type SlotButtonProps = React.ComponentProps<'button'> & {
     inline?: boolean;
     selected?: boolean;
-    icon?: React.ReactElement;
+    icon?: ReactNode;
     title: string;
     href?: string;
 };

@@ -5,6 +5,12 @@ import SearchResult from '../components/Search/SearchResult';
 import Search from '../components/Search';
 import { searchBlueprints } from '@/lib/api';
 import { BlueprintCardProps } from '../components/BlueprintCard';
+import { NuqsAdapter } from 'nuqs/adapters/next';
+import {
+    FaClockRotateLeft,
+    FaMagnifyingGlass,
+    FaTrophy
+} from 'react-icons/fa6';
 
 type SearchParams = {
     searchParams: Promise<{
@@ -16,12 +22,20 @@ type SearchParams = {
     }>;
 };
 
+const tabs = [
+    { title: 'Most Recent', icon: <FaClockRotateLeft /> },
+    { title: 'Most Favorited', icon: <FaTrophy /> },
+    { title: 'Advanced Search', icon: <FaMagnifyingGlass />, active: true }
+];
+
 export default async function MostRecentPage ({ searchParams }: SearchParams) {
-    
-    const {totalBlueprints, page, totalPage, items} = await searchBlueprints(await searchParams)
+    const { totalBlueprints, page, totalPage, items } = await searchBlueprints(
+        await searchParams
+    );
+
     return (
-        <>
-            <Tabs />
+        <NuqsAdapter>
+            <Tabs items={tabs} header />
             <Panel title='Search' className='pb-0'>
                 <Search>
                     <SearchResult
@@ -33,6 +47,6 @@ export default async function MostRecentPage ({ searchParams }: SearchParams) {
                     />
                 </Search>
             </Panel>
-        </>
+        </NuqsAdapter>
     );
 }
