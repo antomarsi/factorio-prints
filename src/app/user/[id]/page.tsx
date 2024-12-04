@@ -1,48 +1,27 @@
-'use client';
-import { useParams, useRouter } from 'next/navigation';
-import { Panel, PanelInset } from '../../components/Panel';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { Panel } from '../../components/Panel';
 import BlueprintCard from '@/app/components/BlueprintCard';
 import { searchUser } from '@/lib/api';
+import UserCard from '@/app/components/UserCard';
 
 type userParams = {
-    id: string
-}
+    id: string;
+};
 
-export default async function UserPage ({params}: {params: Promise<userParams>}) {
-    const data = await searchUser((await params).id)
-    console.log(data)
-    const {id, markdown}  = {
-        id: "123",
-        markdown: ""
-    }
+export default async function UserPage ({
+    params
+}: {
+    params: Promise<userParams>;
+}) {
+    const { author, blueprints } = await searchUser((await params).id);
 
     return (
         <>
-            <Panel className='!py-0'>
-                <div className='flex'>
-                    <PanelInset
-                        dark
-                        className='p0 w-[192px] h-[192px] shrink-0 relative'
-                    >
-                        <img
-                            src={'/imgs/no-avatar.png'}
-                            title={id?.toString()}
-                        />
-                        <div className='shadow-overlay' />
-                    </PanelInset>
-                    <div className='author-card-content p-4'>
-                        <h2 className='author-card-title'>{id}</h2>
-                        <div className='profile-bio-display'>
-                            <Markdown remarkPlugins={[remarkGfm]}>
-                                {markdown}
-                            </Markdown>
-                        </div>
-                    </div>
-                </div>
-            </Panel>
-            <Panel className='pb-0' title={`Blueprints by ${id}`}>
+            <UserCard
+                author={author.username}
+                image={author.image}
+                description={author.description}
+            />
+            <Panel className='pb-0' title={`Blueprints by ${author.username}`}>
                 <div>
                     <BlueprintCard
                         author={{ name: 'BonnaRe', id: '' }}

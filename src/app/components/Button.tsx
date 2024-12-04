@@ -53,7 +53,7 @@ export default function Button ({
         );
     }
     return (
-        <Link href={link} target={props.target}>
+        <Link href={link} target={props.target} className='no-underline hover:no-underline'>
             <button className={classes} onClick={onClick} {...props}>
                 {icon}
                 {title}

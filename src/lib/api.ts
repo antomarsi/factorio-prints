@@ -1,4 +1,6 @@
-
+import { notFound } from 'next/navigation';
+import { cache } from 'react';
+import 'server-only'
 
 export interface IBlueprint {
     id: string;
@@ -67,6 +69,9 @@ export const searchBlueprints = async (params: {
 export const searchUser = async (userId: String): Promise<any> => {
     const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/user/${userId}`)
     const result = await fetch(url)
+    if (result.status === 404) {
+        notFound()
+    }
     const data = await result.json()
     return data
 }
@@ -74,6 +79,20 @@ export const searchUser = async (userId: String): Promise<any> => {
 export const searchBlueprint = async (userId: String): Promise<IBlueprint> => {
     const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprint/${userId}`)
     const result = await fetch(url)
+    if (result.status === 404) {
+        notFound()
+    }
     const data = await result.json()
+
     return parseApiData(data)
+}
+
+export const searchContentTiles = async (blueprintId: string) : Promise<any> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprint-content-tiles/${blueprintId}`)
+    const result = await fetch(url)
+    if (result.status === 404) {
+        notFound()
+    }
+    const data = await result.json()
+    return data;
 }

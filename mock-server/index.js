@@ -1,8 +1,10 @@
 import express from 'express';
 import db from './database.json' with { type: "json"};
-
+import morgan from 'morgan';
 const app = express();
 const port = 3001;
+
+app.use(morgan("combined"))
 
 const markdown = `
 ## Getting Started
@@ -29,8 +31,10 @@ app.get('/api/blueprints', async (req, res) => {
     const page = req.query.page || 1;
     const sort = req.query.sort;
     const limit = 20
+    
+    const database = JSON.parse(JSON.stringify(db.database));
 
-    let filteredDatabase = db.database;
+    let filteredDatabase = database;
     await new Promise(r => setTimeout(r, 2000));
     if (sort) {
       if (sort == "favorited") {
@@ -60,7 +64,7 @@ app.get('/api/blueprints', async (req, res) => {
       paginatedData.push(filteredDatabase[i])
     }
     paginatedData = paginatedData.map(v => {
-      return{image: buildImageUrl(v.imgurImage.imgurId, v.imgurImage.imgurType),...v }
+      return{image: buildImageUrl(v.imgurImage.imgurId, v.imgurImage.imgurType),...v, blueprintString: null }
     })
     res.json({total: filteredDatabase.length, page, totalPage: Math.ceil(filteredDatabase.length / limit), data: paginatedData})
 });
@@ -71,11 +75,14 @@ app.get('/api/blueprint/:id', async (req, res) => {
     res.status(404).json({code: 404, message: "Data not found"})
     return;
   }
+  
+  let database = JSON.parse(JSON.stringify(db.database));
 
-  let blueprint = db.database.find((v) => v.key == req.params.id)
+  let blueprint = database.find((v) => v.key == req.params.id)
   await new Promise(r => setTimeout(r, 2000));
   if (blueprint) {
     blueprint.image = buildImageUrl(blueprint.imgurImage.imgurId, blueprint.imgurImage.imgurType)
+    blueprint.blueprintString = null
     res.json(blueprint)
   } else {
     res.status(404).json({code: 404, message: "Data not found"})
@@ -88,19 +95,38 @@ app.get('/api/user/:id', async (req, res) => {
     res.status(404).json({code: 404, message: "Data not found"})
     return;
   }
-  let blueprints = db.database.filter(v => v.author.userId == id).map(v => {
-    return{image: buildImageUrl(v.imgurImage.imgurId, v.imgurImage.imgurType),...v }
+  let blueprints = database.filter(v => v.author.userId == id).map(v => {
+    return{image: buildImageUrl(v.imgurImage.imgurId, v.imgurImage.imgurType),...v, blueprintString: null }
   })
   
   await new Promise(r => setTimeout(r, 2000));
   if (blueprints) {
-    const authorData = {
-      author: {
+    const author = {
+        id: blueprints[0].author.userId,
         username: blueprints[0].author.displayName,
-        description: markdown
-      }    
+        description: markdown  
     }
-    res.json({author: authorData, blueprints: blueprints})
+    res.json({author, blueprints: blueprints})
+  } else {
+    res.status(404).json({code: 404, message: "Data not found"})
+  }
+})
+
+app.get('/api/blueprint-content-tiles/:id', async (req, res) => {
+  let id = req.params.id;
+  const database = JSON.parse(JSON.stringify(db.database));
+  let blueprints = database.filter(v => v.key == id)
+  if (blueprints) {
+    let contentTiles = blueprints.map(v => {
+      let contentTiles = v.blueprintString.contentTiles
+      if (!contentTiles) {
+        return [];
+      } else {
+        let result = Object.entries(contentTiles).map(([k, v]) => ({...v, type: k})); 
+        return result;
+      }
+    }).flat()
+    res.json(contentTiles)
   } else {
     res.status(404).json({code: 404, message: "Data not found"})
   }

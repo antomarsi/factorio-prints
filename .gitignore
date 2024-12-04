@@ -45,6 +45,6 @@ next-env.d.ts
 ./.firebase/.npm
 .next
 dist
-./mock-server/**/*.json
+mock-server/*.json
 ./mock-server/*.json
 ./mock-server/test.js

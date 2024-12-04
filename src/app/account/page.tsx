@@ -77,7 +77,7 @@ export default function AccountSettingsPage () {
                             <Button
                                 type='submit'
                                 green='right'
-                                title='Save'
+                                title='Save new bio'
                                 icon={<FaFloppyDisk />}
                                 disabled={isLoading && isDirty}
                             />

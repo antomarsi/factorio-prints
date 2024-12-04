@@ -11,9 +11,9 @@ import {
 } from 'react-icons/fa6';
 import { format, formatDistance } from 'date-fns';
 import { twJoin } from 'tailwind-merge';
-import { PanelInset } from '../Panel';
-import SlotButton from '../SlotButton';
-import Button from '../Button';
+import { PanelInset } from './Panel';
+import SlotButton from './SlotButton';
+import Button from './Button';
 
 export type BlueprintCardProps = {
     image: string;
@@ -123,7 +123,7 @@ export default function BlueprintCard ({
             </div>
             <PanelInset dark className='!m-0 w-full p-1'>
                 <div className='flex justify-between blueprint-tag-view'>
-                    <div className='flex flex-wrap blueprint-tags max-w-[600px] gap-1'>
+                    <div className='flex flex-wrap blueprint-tags max-w-[600px]'>
                         {tags.map((v, i) => (
                             <SlotButton inline title={v} key={i} />
                         ))}
