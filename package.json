@@ -9,6 +9,7 @@
         "start": "next start"
     },
     "dependencies": {
+        "@tanstack/react-table": "^8.20.5",
         "date-fns": "^4.1.0",
         "firebase": "^11.0.2",
         "lodash.range": "^3.2.0",

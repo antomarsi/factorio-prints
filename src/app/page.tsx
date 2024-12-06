@@ -1,3 +1,5 @@
-import MostRecentPage from "./search/page";
+import SearchPage, { SearchParams } from './search/page';
 
-export default MostRecentPage;
+export default async function Page ({ searchParams }: SearchParams) {
+    return <SearchPage advancedSearch={true} searchParams={searchParams} />;
+}

@@ -12,7 +12,7 @@ import {
     FaTrophy
 } from 'react-icons/fa6';
 
-type SearchParams = {
+export type SearchParams = {
     searchParams: Promise<{
         searchTerm?: string;
         tags?: string[] | string;
@@ -22,25 +22,52 @@ type SearchParams = {
     }>;
 };
 
-const tabs = [
-    { title: 'Most Recent', icon: <FaClockRotateLeft /> },
-    { title: 'Most Favorited', icon: <FaTrophy /> },
-    { title: 'Advanced Search', icon: <FaMagnifyingGlass />, active: true }
+const tabs = (sort?: string) => [
+    {
+        title: 'Most Recent',
+        icon: <FaClockRotateLeft />,
+        href: '/recent',
+        active: sort == 'recent'
+    },
+    {
+        title: 'Most Favorited',
+        icon: <FaTrophy />,
+        href: '/favorited',
+        active: sort == 'favorited'
+    },
+    {
+        title: 'Advanced Search',
+        icon: <FaMagnifyingGlass />,
+        href: '/search',
+        active: !sort
+    }
 ];
 
-export default async function MostRecentPage ({ searchParams }: SearchParams) {
-    const { totalBlueprints, page, totalPage, items } = await searchBlueprints(
-        await searchParams
-    );
+type CustomParams = {
+    advancedSearch?: boolean;
+    sort?: string;
+};
+
+export default async function SearchPage ({
+    searchParams,
+    advancedSearch,
+    sort
+}: SearchParams & CustomParams) {
+    const params = await searchParams;
+    const { totalBlueprints, page, totalPage, items } = await searchBlueprints({
+        ...params,
+        sort: sort || params.sort
+    });
+    console.log(tabs(sort))
 
     return (
         <NuqsAdapter>
-            <Tabs items={tabs} header />
+            <Tabs items={tabs(sort)} header />
             <Panel title='Search' className='pb-0'>
                 <Search>
                     <SearchResult
                         totalBlueprints={totalBlueprints}
-                        advancedSearch
+                        advancedSearch={advancedSearch}
                         items={items as BlueprintCardProps[]}
                         page={page}
                         totalPage={totalPage}

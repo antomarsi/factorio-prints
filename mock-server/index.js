@@ -112,6 +112,16 @@ app.get('/api/user/:id', async (req, res) => {
   }
 })
 
+const parseBlueprintBooks = (v) => {
+  return Object.entries(v).map(([k, v]) => {
+    let data = {...v}
+    if (v.blueprints) {
+      data.blueprints = v.blueprints.map(b => parseBlueprintBooks(b)).flat()
+    }
+    return data;
+  });
+}
+
 app.get('/api/blueprint-content-tiles/:id', async (req, res) => {
   let id = req.params.id;
   const database = JSON.parse(JSON.stringify(db.database));
@@ -122,8 +132,7 @@ app.get('/api/blueprint-content-tiles/:id', async (req, res) => {
       if (!contentTiles) {
         return [];
       } else {
-        let result = Object.entries(contentTiles).map(([k, v]) => ({...v, type: k})); 
-        return result;
+        return parseBlueprintBooks(contentTiles);
       }
     }).flat()
     res.json(contentTiles)

@@ -23,6 +23,11 @@ export const tabs = (
         title: 'Blueprint',
         href: `/blueprint/${id}/blueprint`,
         active: tab == 'blueprint'
+    },
+    {
+        title: 'Changelog',
+        href: `/blueprint/${id}/changelog`,
+        active: tab == 'changelog'
     }
 ]};
 
