@@ -9,7 +9,8 @@ import {
     FaGoogle,
     FaHeart,
     FaRightFromBracket,
-    FaUser
+    FaUser,
+    FaSpinner
 } from 'react-icons/fa6';
 import Dropdown from './Dropdown';
 import Link from 'next/link';
@@ -26,7 +27,8 @@ googleProvider.setCustomParameters({ prompt: 'consent select_account' });
 githubProvider.setCustomParameters({ prompt: 'consent select_account' });
 
 export default function Header () {
-    const { user, authenticate, handleLogout } = useContext(AuthContext);
+    const { user, authenticate, handleLogout, loading } =
+        useContext(AuthContext);
 
     const links = useMemo(() => {
         const routes = [
@@ -46,10 +48,6 @@ export default function Header () {
             {
                 title: 'About',
                 link: '/about'
-            },
-            {
-                title: 'Contributors',
-                link: '/contributors'
             }
         ];
         const separateRoutes = routes.map(v => (
@@ -72,7 +70,8 @@ export default function Header () {
                 <Dropdown
                     title={user.displayName || user.email || 'Engineer'}
                     img={user.photoURL}
-                    icon={<FaUser size={27} />}
+                    icon={<FaUser />}
+                    className='min-w-[128px]'
                 >
                     {[
                         {
@@ -96,45 +95,47 @@ export default function Header () {
                             onClick: handleLogout
                         }
                     ].map((v, i) => (
-                        <Button
-                            key={i}
-                            title={v.title}
-                            icon={v.icon}
-                            link={v.link}
-                            onClick={v.onClick}
-                        />
+                        <Button key={i} href={v.link} onClick={v.onClick} className='min-w-[128px]'>
+                            {v.icon}
+                            {v.title}
+                        </Button>
                     ))}
                 </Dropdown>
             );
         }
+        if (loading) {
+            <FaSpinner className='animate-spin' />;
+        }
         return (
-            <Dropdown title='Log in' icon={<FaUser size={20} />}>
+            <Dropdown
+                title='Log in'
+                icon={<FaUser />}
+                className='min-w-[150px]'
+            >
                 {[
                     {
                         title: 'Google',
                         icon: <FaGoogle size={16} />,
                         onClick: async () => {
-                            await authenticate(googleProvider)
+                            await authenticate(googleProvider);
                         }
                     },
                     {
                         title: 'Github',
                         icon: <FaGithub size={16} />,
                         onClick: async () => {
-                            await authenticate(githubProvider)
+                            await authenticate(githubProvider);
                         }
                     }
                 ].map((v, i) => (
-                    <Button
-                        key={i}
-                        title={v.title}
-                        icon={v.icon}
-                        onClick={v.onClick}
-                    />
+                    <Button key={i} onClick={v.onClick} className='min-w-[128px]'>
+                        {v.icon}
+                        {v.title}
+                    </Button>
                 ))}
             </Dropdown>
         );
-    }, [user]);
+    }, [user, loading]);
 
     return (
         <div className='top-bar'>

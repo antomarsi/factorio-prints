@@ -5,7 +5,6 @@ import SearchResult from '../components/Search/SearchResult';
 import Search from '../components/Search';
 import { searchBlueprints } from '@/lib/api';
 import { BlueprintCardProps } from '../components/BlueprintCard';
-import { NuqsAdapter } from 'nuqs/adapters/next';
 import {
     FaClockRotateLeft,
     FaMagnifyingGlass,
@@ -58,10 +57,9 @@ export default async function SearchPage ({
         ...params,
         sort: sort || params.sort
     });
-    console.log(tabs(sort))
 
     return (
-        <NuqsAdapter>
+        <>
             <Tabs items={tabs(sort)} header />
             <Panel title='Search' className='pb-0'>
                 <Search>
@@ -74,6 +72,6 @@ export default async function SearchPage ({
                     />
                 </Search>
             </Panel>
-        </NuqsAdapter>
+        </>
     );
 }

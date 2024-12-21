@@ -1,5 +1,5 @@
 'use client';
-import { FaArrowDownWideShort } from 'react-icons/fa6';
+import { FaArrowDownWideShort, FaEye } from 'react-icons/fa6';
 import SlotButton from '../SlotButton';
 import Pagination from '../Pagination';
 import { Suspense, useMemo } from 'react';
@@ -9,6 +9,7 @@ import BlueprintCard, {
     SkeletonBlueprintCard
 } from '../BlueprintCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Button from '../Button';
 
 type TopSearchResultProps = {
     totalBlueprints: number;
@@ -101,7 +102,21 @@ export default function SearchResult ({
     }, [limit]);
 
     const resultItems = useMemo(() => {
-        return items.map(v => <BlueprintCard {...v} key={v.id} />);
+        return items.map(v => (
+            <BlueprintCard
+                {...v}
+                key={v.id}
+                button={
+                    <Button
+                        green
+                        href={`/blueprint/${v.id}`}
+                        className='!justify-center gap-2'
+                    >
+                        <FaEye /> View
+                    </Button>
+                }
+            />
+        ));
     }, [items]);
     const suspenseTopSearch = useMemo(() => {
         return (

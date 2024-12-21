@@ -40,10 +40,11 @@ export default function Pagination ({
                     key={i}
                     squareSm
                     type='button'
-                    title={v.toString()}
                     active={v == page}
                     onClick={() => onCLick(v as number)}
-                />
+                >
+                    {v.toString()}
+                </Button>
             );
         });
     }, [page, totalPage, limit, 1]);
@@ -53,18 +54,20 @@ export default function Pagination ({
             <Button
                 squareSm
                 type='button'
-                icon={<FaAngleLeft size={24} fontWeight={'600'} />}
                 disabled={page <= 1}
                 onClick={() => onCLick(page - 1)}
-            />
+            >
+                <FaAngleLeft size={24} fontWeight={'600'} />
+            </Button>
             {paginationValues}
             <Button
                 squareSm
                 type='button'
-                icon={<FaAngleRight size={24} />}
                 disabled={page >= totalPage}
                 onClick={() => onCLick(page + 1)}
-            />
+            >
+                <FaAngleRight size={24} />
+            </Button>
         </>
     );
 }

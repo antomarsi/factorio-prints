@@ -6,36 +6,53 @@ import {
     signInWithPopup,
     User
 } from 'firebase/auth';
-import { auth } from '../firebase/app';
+import { auth } from '../firebase/client';
 
 export const AuthContext = createContext<{
     user: User | undefined;
     authenticate: (provider: AuthProvider) => Promise<void>;
     handleLogout: () => Promise<void>;
     reloadUser: () => void;
+    isModerator: boolean;
+    loading: boolean;
 }>({
     user: undefined,
+    isModerator: false,
     authenticate: async _ => {},
     handleLogout: async () => {},
-    reloadUser: () => {}
+    reloadUser: () => {},
+    loading: true
 });
 
 export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     children
 }) => {
     const [user, setUser] = useState<User>();
+    const [isModerator, setIsModerator] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const unsubcribe = onAuthStateChanged(auth, user =>
-            setUser(user || undefined)
-        );
+        const unsubcribe = onAuthStateChanged(auth, user => {
+            setUser(user || undefined);
+            if (!user) {
+                setLoading(false);
+                setIsModerator(false);
+            } else {
+                user.getIdTokenResult().then(v => {
+                    setLoading(false);
+                    setIsModerator(v.claims.role === 'admin');
+                });
+            }
+        });
         return () => unsubcribe();
     }, []);
 
     const authenticate = async (provider: AuthProvider) => {
         try {
+            setLoading(true);
             const result = await signInWithPopup(auth, provider);
             setUser(result.user);
+            setLoading(false);
         } catch (error: any) {
             // Handle Errors here.
             const errorCode = error.code;
@@ -44,6 +61,7 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
             const email = error.customData.email;
             console.error({ error, errorCode, errorMessage, email });
             setUser(undefined);
+            setLoading(false);
         }
     };
 
@@ -58,7 +76,14 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
 
     return (
         <AuthContext.Provider
-            value={{ user, authenticate, handleLogout, reloadUser }}
+            value={{
+                user,
+                authenticate,
+                handleLogout,
+                reloadUser,
+                loading,
+                isModerator
+            }}
         >
             {children}
         </AuthContext.Provider>

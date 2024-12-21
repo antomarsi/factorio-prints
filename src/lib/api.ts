@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import { cache } from 'react';
 import 'server-only'
 
 export interface IBlueprint {
@@ -17,6 +16,7 @@ export interface IBlueprint {
     category: string;
     favorites: number;
 }
+
 
 const parseApiData = (v: any) => {
     return {
@@ -43,8 +43,11 @@ export const searchBlueprints = async (params: {
     sort?: string;
     page?: string;
 }): Promise<{ totalBlueprints: number, page: number, totalPage: number, items: IBlueprint[] }> => {
-    const { tags, ignoredTags, ...otherParams } = params
+    const { tags, ignoredTags, sort, ...otherParams } = params
     const searchParams = new URLSearchParams(otherParams)
+    if (sort) {
+        searchParams.append("sort", sort)
+    }
     if (Array.isArray(tags)) {
         tags.forEach(v => searchParams.append("tags", v))
     } else if (tags !== undefined) {
@@ -55,7 +58,7 @@ export const searchBlueprints = async (params: {
     } else if (ignoredTags !== undefined) {
         searchParams.append("ignoredTags", ignoredTags)
     }
-    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprints`)
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/blueprints`)
     url.search = searchParams.toString()
 
     const response = await fetch(url)
@@ -67,7 +70,7 @@ export const searchBlueprints = async (params: {
 }
 
 export const searchUser = async (userId: String): Promise<any> => {
-    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/user/${userId}`)
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${userId}`)
     const result = await fetch(url)
     if (result.status === 404) {
         notFound()
@@ -77,7 +80,7 @@ export const searchUser = async (userId: String): Promise<any> => {
 }
 
 export const searchBlueprint = async (userId: String): Promise<IBlueprint> => {
-    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprint/${userId}`)
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/blueprints/${userId}`)
     const result = await fetch(url)
     if (result.status === 404) {
         notFound()
@@ -87,8 +90,18 @@ export const searchBlueprint = async (userId: String): Promise<IBlueprint> => {
     return parseApiData(data)
 }
 
-export const searchContentTiles = async (blueprintId: string) : Promise<any> => {
-    const url = new URL(`${process.env.NEXT_PUBLIC_APP_REST_URL}/api/blueprint-content-tiles/${blueprintId}`)
+export const searchContentTiles = async (blueprintId: string): Promise<any> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/blueprints/${blueprintId}/content-tiles`)
+    const result = await fetch(url)
+    if (result.status === 404) {
+        notFound()
+    }
+    const data = await result.json()
+    return data;
+}
+
+export const searchBlueprintChangelog = async (blueprintId: string): Promise<any[]> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/blueprints/${blueprintId}/changelog`)
     const result = await fetch(url)
     if (result.status === 404) {
         notFound()

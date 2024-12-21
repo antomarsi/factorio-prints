@@ -33,12 +33,10 @@ export default function SearchBar () {
                         )}
                     />
                 </div>
-                <Button
-                    green
-                    title='Search'
-                    icon={<FaMagnifyingGlass />}
-                    type='submit'
-                />
+                <Button green type='submit' className='!justify-center gap-2'>
+                    <FaMagnifyingGlass />
+                    Search
+                </Button>
             </div>
         </PanelInset>
     );

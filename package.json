@@ -6,15 +6,18 @@
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build",
-        "start": "next start"
+        "start": "next start",
+        "emulator": "firebase emulators:start"
     },
     "dependencies": {
         "@tanstack/react-table": "^8.20.5",
         "date-fns": "^4.1.0",
+        "disqus-react": "^1.1.5",
         "firebase": "^11.0.2",
+        "firebase-admin": "^13.0.2",
+        "js-cookie": "^3.0.5",
         "lodash.range": "^3.2.0",
         "next": "15.0.3",
-        "nuqs": "^2.2.3",
         "react": "19.0.0-rc-66855b96-20241106",
         "react-dom": "19.0.0-rc-66855b96-20241106",
         "react-hook-form": "^7.53.2",
@@ -36,10 +39,6 @@
         "eslint-config-next": "15.0.3",
         "eslint-plugin-react-hooks": "^5.0.0",
         "eslint-plugin-react-refresh": "^0.4.14",
-        "express": "^4.21.1",
-        "globals": "^15.11.0",
-        "morgan": "^1.10.0",
-        "msw": "^2.6.6",
         "postcss": "^8",
         "sass": "^1.81.0",
         "sass-loader": "^16.0.3",

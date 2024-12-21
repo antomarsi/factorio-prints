@@ -13,6 +13,7 @@ interface IFormInput {
 
 export default function AccountSettingsPage () {
     const { user, reloadUser } = useContext(AuthContext);
+
     const {
         register,
         handleSubmit,
@@ -77,10 +78,10 @@ export default function AccountSettingsPage () {
                             <Button
                                 type='submit'
                                 green='right'
-                                title='Save new bio'
-                                icon={<FaFloppyDisk />}
                                 disabled={isLoading && isDirty}
-                            />
+                            >
+                                <FaFloppyDisk /> Save new bio
+                            </Button>
                         </div>
                     </form>
                 </PanelInset>

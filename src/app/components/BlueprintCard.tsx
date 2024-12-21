@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import {
     FaGear,
     FaCubes,
-    FaEye,
     FaHeart,
     FaClockRotateLeft
 } from 'react-icons/fa6';
@@ -13,7 +12,6 @@ import { format, formatDistance } from 'date-fns';
 import { twJoin } from 'tailwind-merge';
 import { PanelInset } from './Panel';
 import SlotButton from './SlotButton';
-import Button from './Button';
 
 export type BlueprintCardProps = {
     image: string;
@@ -29,6 +27,7 @@ export type BlueprintCardProps = {
     category: string;
     favorites: number;
     id: string;
+    button?: ReactNode;
 };
 
 export default function BlueprintCard ({
@@ -43,6 +42,7 @@ export default function BlueprintCard ({
     favorites,
     id,
     className,
+    button,
     ...props
 }: BlueprintCardProps & React.ComponentProps<'div'>) {
     return (
@@ -132,12 +132,7 @@ export default function BlueprintCard ({
                         <div className='mr-3' />
                         <div className='mr-3' hx-disinherit='*' />
                         <div className='btn blueprint-view-button btn-blueprint'>
-                            <Button
-                                green
-                                title='View'
-                                icon={<FaEye />}
-                                className='!justify-center gap-2'
-                            />
+                            {button}
                         </div>
                     </div>
                 </div>

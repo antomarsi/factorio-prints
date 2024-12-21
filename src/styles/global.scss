@@ -154,10 +154,13 @@
     main {
         flex: 1;
     }
-    ul {
+    ul:not(.contact):not(.tabs){
         margin-top: 16px;
         margin-left: 32px;
         list-style-image: url('/imgs/ul-list.png');
+    }
+    .contact > li {
+        @apply flex gap-3 text-[20px] my-3;
     }
 
     li > ul {
@@ -342,7 +345,7 @@
     }
 
     .button {
-        @apply px-3 text-black font-semibold border-none min-w-[128px] whitespace-nowrap py-[10px] bg-[#8e8e8e] relative cursor-pointer;
+        @apply px-3 text-black font-semibold border-none whitespace-nowrap py-[10px] bg-[#8e8e8e] relative cursor-pointer;
         line-height: inherit;
         font-size: 16px;
         box-shadow: inset 8px 0px 4px -8px #000, inset -8px 0px 4px -8px #000,
@@ -497,6 +500,10 @@
     }
 
     // Misc
+
+    .contributors li {
+        @apply my-2 text-[20px];
+    }
     .container {
         @apply w-[1200px] max-w-full mx-auto px-4 shrink-0;
     }

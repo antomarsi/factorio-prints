@@ -1,7 +1,5 @@
 'use client';
-
 import Link from 'next/link';
-import { ComponentProps } from 'react';
 import { twJoin } from 'tailwind-merge';
 
 type TabsProps = React.PropsWithChildren & {
