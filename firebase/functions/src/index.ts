@@ -6,6 +6,9 @@ initializeApp(config().firebase)
 
 export const onUserCreate = auth.user().onCreate(async (user) => {
     await getFirestore().doc(`users/${user.uid}`).create({
-        isModerator: false
+        isModerator: false,
+        displayName: user.displayName,
+        description: "",
+        favorites: []
     })
 })

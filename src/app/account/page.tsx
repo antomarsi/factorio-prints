@@ -1,26 +1,16 @@
-'use client';
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { Panel, PanelInset } from '../components/Panel';
-import { AuthContext } from '../../context/auth-context';
-import Button from '../components/Button';
-import { FaFloppyDisk } from 'react-icons/fa6';
-import { updateProfile } from 'firebase/auth';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { cookies } from 'next/headers';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { auth } from '@/firebase/server';
+import { getAccount } from '@/lib/api';
+import { AccountForm } from './form';
 
-interface IFormInput {
-    displayName: string;
-}
+export default async function AccountSettingsPage () {
+    const cookieStore = await cookies();
+    const authToken = cookieStore.get('firebaseIdToken')?.value;
 
-export default function AccountSettingsPage () {
-    const { user, reloadUser } = useContext(AuthContext);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isLoading, isDirty }
-    } = useForm<IFormInput>();
-
-    if (!user) {
+    if (!authToken || !auth) {
         return (
             <Panel title='Account Settings'>
                 <PanelInset>
@@ -32,58 +22,24 @@ export default function AccountSettingsPage () {
             </Panel>
         );
     }
-
-    const onSubmit: SubmitHandler<IFormInput> = async data => {
-        if (user) {
-            if (!data.displayName) {
-                throw new Error('Must be a valid username');
-            }
-            await updateProfile(user, {
-                displayName: data.displayName
-            });
-            reloadUser();
-        }
-    };
+    let user: DecodedIdToken | null = null;
+    try {
+        user = await auth.verifyIdToken(authToken);
+    } catch (error) {
+        console.log(error);
+    }
+    const userInfoResponse = await getAccount(authToken);
 
     return (
         <>
             <Panel title='Account Settings' className='medium-center'>
                 <PanelInset>
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className='flex flex-col'
-                    >
-                        <div className='pb-3'>
-                            <label htmlFor='displayName'>Display Name: </label>
-                            <div className='mt-2 pr-4'>
-                                <input
-                                    {...register('displayName', {
-                                        required: true
-                                    })}
-                                    className='f-input'
-                                    type='text'
-                                    defaultValue={user.displayName || ''}
-                                    aria-invalid={
-                                        errors.displayName ? 'true' : 'false'
-                                    }
-                                />
-                                {errors.displayName?.type === 'required' && (
-                                    <p role='alert' className='text-red-600'>
-                                        *Display Name required!
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        <div className='self-end'>
-                            <Button
-                                type='submit'
-                                green='right'
-                                disabled={isLoading && isDirty}
-                            >
-                                <FaFloppyDisk /> Save new bio
-                            </Button>
-                        </div>
-                    </form>
+                    <AccountForm
+                        defaultValues={{
+                            displayName: userInfoResponse.displayName,
+                            description: userInfoResponse.description
+                        }}
+                    />
                 </PanelInset>
             </Panel>
         </>

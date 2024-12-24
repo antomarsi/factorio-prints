@@ -45,3 +45,7 @@ export async function GET(req: NextRequest) {
     })
     return Response.json({ total: filteredDatabase.length, page, totalPage: Math.ceil(filteredDatabase.length / limit), data: paginatedData })
 }
+
+export async function POST(req: NextRequest) {
+    
+}

@@ -7,6 +7,20 @@ import {
     User
 } from 'firebase/auth';
 import { auth } from '../firebase/client';
+import Cookies from 'js-cookie';
+import { usePathname, useRouter } from 'next/navigation';
+
+export function getAuthToken (): string | undefined {
+    return Cookies.get('firebaseIdToken');
+}
+
+export function setAuthToken (token: string): string | undefined {
+    return Cookies.set('firebaseIdToken', token, { secure: true });
+}
+
+export function removeAuthToken (): void {
+    Cookies.remove('firebaseIdToken');
+}
 
 export const AuthContext = createContext<{
     user: User | undefined;
@@ -30,18 +44,25 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     const [user, setUser] = useState<User>();
     const [isModerator, setIsModerator] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
+    const pathname = usePathname()
+    const router = useRouter()
 
     useEffect(() => {
-        const unsubcribe = onAuthStateChanged(auth, user => {
+        const unsubcribe = onAuthStateChanged(auth, async user => {
             setUser(user || undefined);
             if (!user) {
                 setLoading(false);
                 setIsModerator(false);
+                removeAuthToken();
             } else {
-                user.getIdTokenResult().then(v => {
-                    setLoading(false);
-                    setIsModerator(v.claims.role === 'admin');
-                });
+                const tokenValues = await user.getIdTokenResult();
+                setIsModerator(tokenValues.claims.role === 'admin');
+                setLoading(false);
+                const token = await user.getIdToken();
+                setAuthToken(token);
+            }
+            if (pathname.startsWith("/account")) {
+                router.refresh()
             }
         });
         return () => unsubcribe();

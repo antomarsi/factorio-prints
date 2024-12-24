@@ -30,6 +30,7 @@
         "tailwind-merge": "^2.5.5"
     },
     "devDependencies": {
+        "@types/js-cookie": "^3.0.6",
         "@types/lodash.range": "^3.2.9",
         "@types/node": "^20",
         "@types/react": "^18",

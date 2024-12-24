@@ -1,5 +1,5 @@
-import { notFound } from 'next/navigation';
 import 'server-only'
+import { notFound } from 'next/navigation';
 
 export interface IBlueprint {
     id: string;
@@ -79,6 +79,20 @@ export const searchUser = async (userId: String): Promise<any> => {
     return data
 }
 
+export const getAccount = async (token: string): Promise<any> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/user/account`)
+    const result = await fetch(url, {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    })
+    if (result.status === 404) {
+        notFound()
+    }
+    const data = await result.json()
+    return data
+}
+
 export const searchBlueprint = async (userId: String): Promise<IBlueprint> => {
     const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/blueprints/${userId}`)
     const result = await fetch(url)
@@ -106,6 +120,13 @@ export const searchBlueprintChangelog = async (blueprintId: string): Promise<any
     if (result.status === 404) {
         notFound()
     }
+    const data = await result.json()
+    return data;
+}
+
+export const createBlueprint = async (): Promise<any> => {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/blueprints`)
+    const result = await fetch(url, { method: "POST" })
     const data = await result.json()
     return data;
 }

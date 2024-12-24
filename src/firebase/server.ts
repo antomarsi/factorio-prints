@@ -1,20 +1,24 @@
 import "server-only";
 import serviceAccount from "./serviceAccount.json"
-import { initializeApp } from "firebase-admin";
-import { cert, getApps, ServiceAccount } from "firebase-admin/app";
+import { initializeApp } from "firebase-admin/app";
+import { App, cert, getApps, ServiceAccount } from "firebase-admin/app";
 import { Firestore, getFirestore } from "firebase-admin/firestore";
+import { Auth, getAuth } from "firebase-admin/auth";
 
-let firestore : Firestore | undefined = undefined;
 
 const currentApps = getApps();
 
+let app: App
+
 if (currentApps.length <= 0) {
-    const app = initializeApp({
+    app = initializeApp({
         credential: cert(serviceAccount as ServiceAccount)
     })
-    firestore = getFirestore(app)
 } else {
-    firestore = getFirestore(currentApps[0])
+    app = currentApps[0];
 }
 
-export { firestore }
+const firestore: Firestore = getFirestore(app);
+const auth: Auth = getAuth(app);
+
+export { firestore, auth }

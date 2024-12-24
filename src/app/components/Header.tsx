@@ -77,7 +77,7 @@ export default function Header () {
                         {
                             title: 'My Favorites',
                             icon: <FaHeart size={16} />,
-                            link: '/my-favotires'
+                            link: '/my-favorites'
                         },
                         {
                             title: 'My Blueprints',
