@@ -9,6 +9,7 @@ export const onUserCreate = auth.user().onCreate(async (user) => {
         isModerator: false,
         displayName: user.displayName,
         description: "",
-        favorites: []
+        favorites: [],
+        blueprints: []
     })
 })

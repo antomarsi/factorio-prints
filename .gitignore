@@ -86,3 +86,5 @@ mock-server/*.json
 ./mock-server/*.json
 ./mock-server/test.js
 src/firebase/*.json
+
+src/data/database.json
