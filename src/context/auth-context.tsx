@@ -54,12 +54,14 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
                 setLoading(false);
                 setIsModerator(false);
                 removeAuthToken();
+                router.refresh()
             } else {
                 const tokenValues = await user.getIdTokenResult();
                 setIsModerator(tokenValues.claims.role === 'admin');
                 setLoading(false);
                 const token = await user.getIdToken();
                 setAuthToken(token);
+                router.refresh()
             }
             if (pathname.startsWith("/account")) {
                 router.refresh()

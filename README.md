@@ -16,18 +16,19 @@ That is simple, just run the following command:
 
 ### Running Firebase Emulator
 
-That's is more tricky, you need to run the following command:
-
 ```
-docker compose up -d
+yarn emulator
 ```
 
-After that, you need to go inside the container and follow the instructions on firebase emulator (more instructions are WIP)
-
-#### Running the API
-
-The mock api uses express that relies on a json file, that is not the best tool to make a mock api and the json file is not available because it uses real users content (if you want, just ask), to run the API, just run the following command:
-```
-node .\mock-server\index.js
-```
-**Note**: Every change in the `index.js`, you need to restart the server
+## TO DO
+    - Finish user's blueprint page
+    - Add Update Page
+    - Add Delete page
+    - Add Moderation Tools
+    - implement copy to clipboard
+    - Implement blueprint's blueprint page
+    - Implement blueprint discussion page
+    - Implement Blueprint changelog page
+    - Implement Favorites
+    - Implement game versions
+    - Implement refresh tokens

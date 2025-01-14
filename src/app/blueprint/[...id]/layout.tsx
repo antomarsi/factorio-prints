@@ -2,7 +2,8 @@ import BlueprintCard from '@/app/components/BlueprintCard';
 import Button from '@/app/components/Button';
 import LikeButton from '@/app/components/Button/LikeButton';
 import { Panel } from '@/app/components/Panel';
-import { searchBlueprint } from '@/lib/api';
+import repository from '@/repository';
+
 import { PropsWithChildren } from 'react';
 import { FaDownload } from 'react-icons/fa6';
 
@@ -43,20 +44,20 @@ export default async function Layout ({
     children,
     params
 }: PropsWithChildren<BlueprintPageParams>) {
-    const data = await searchBlueprint((await params).id);
+    const data = await repository.getBlueprint((await params).id);
 
     return (
         <Panel>
             <BlueprintCard
-                author={{ name: data.author.name, id: data.author.id }}
-                category='content'
-                updated_at={new Date(data.updated_at)}
+                author={{ displayName: data.author.displayName, authorId: data.author.authorId }}
+                blueprintType={data.blueprintType}
+                lastUpdatedDate={data.lastUpdatedDate}
                 title={data.title}
-                description={data.description}
+                descriptionMarkdown={data.descriptionMarkdown}
                 image={data.image}
                 tags={data.tags}
                 version={data.version}
-                favorites={data.favorites}
+                numberOfFavorites={data.numberOfFavorites}
                 id={data.id}
                 className='!p-3'
                 button={

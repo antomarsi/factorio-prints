@@ -1,6 +1,6 @@
 import "server-only";
 import db from "@/data/database.json"
-import { IBlueprint, RepositoryInterface } from "./repositoryInterface";
+import { IBlueprint, RepositoryInterface, SearchBlueprintParams } from "./repositoryInterface";
 import { buildImageUrl } from "@/lib/utils";
 import { writeFileSync } from "fs";
 
@@ -101,10 +101,10 @@ export class JsonRepository extends RepositoryInterface {
         return blueprint
     }
 
-    async getBlueprints(searchTerm?: string, tags?: string[], ignoredTags?: string[], sort?: string, page?: number, limit?: number): Promise<{ total: number; page: number; totalPage: number; data: IBlueprint[]; }> {
+    async getBlueprints({ searchTerm, tags, ignoredTags, sort, page }: SearchBlueprintParams): Promise<{ total: number, page: number, totalPage: number, data: IBlueprint[] }> {
         const database = JSON.parse(JSON.stringify((db as any).database));
         let currentPage = page || 1;
-        let currentLimit = limit || 10;
+        let currentLimit = 10;
 
         let filteredDatabase = database;
         if (sort) {
@@ -165,6 +165,6 @@ export class JsonRepository extends RepositoryInterface {
             }
         }).flat()
         return contentTiles;
-
     }
+
 }

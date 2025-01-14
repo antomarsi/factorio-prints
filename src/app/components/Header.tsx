@@ -43,7 +43,7 @@ export default function Header () {
             },
             {
                 title: 'Create',
-                link: '/create'
+                link: '/blueprint/create'
             },
             {
                 title: 'About',

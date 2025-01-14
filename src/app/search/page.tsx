@@ -3,8 +3,8 @@ import { Tabs } from '../components/tabs/index';
 import { Panel } from '../components/Panel';
 import SearchResult from '../components/Search/SearchResult';
 import Search from '../components/Search';
-import { searchBlueprints } from '@/lib/api';
 import { BlueprintCardProps } from '../components/BlueprintCard';
+import repository from '@/repository';
 import {
     FaClockRotateLeft,
     FaMagnifyingGlass,
@@ -53,10 +53,25 @@ export default async function SearchPage ({
     sort
 }: SearchParams & CustomParams) {
     const params = await searchParams;
-    const { totalBlueprints, page, totalPage, items } = await searchBlueprints({
+    let tags: string[] | undefined = undefined;
+    if (params.tags) {
+        tags = typeof params.tags == 'string' ? [params.tags] : params.tags;
+    }
+    let ignoredTags: string[] | undefined = undefined;
+    if (params.ignoredTags) {
+        ignoredTags =
+            typeof params.ignoredTags == 'string'
+                ? [params.ignoredTags]
+                : params.ignoredTags;
+    }
+    const { total, page, totalPage, data } = await repository.getBlueprints({
         ...params,
-        sort: sort || params.sort
+        tags,
+        ignoredTags,
+        sort: sort || params.sort,
+        page: params.page ? Number(params.page) : undefined
     });
+    console.log(total, page, totalPage)
 
     return (
         <>
@@ -64,9 +79,9 @@ export default async function SearchPage ({
             <Panel title='Search' className='pb-0'>
                 <Search>
                     <SearchResult
-                        totalBlueprints={totalBlueprints}
+                        totalBlueprints={total}
                         advancedSearch={advancedSearch}
-                        items={items as BlueprintCardProps[]}
+                        items={data as BlueprintCardProps[]}
                         page={page}
                         totalPage={totalPage}
                     />

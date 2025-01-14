@@ -104,7 +104,16 @@ export default function SearchResult ({
     const resultItems = useMemo(() => {
         return items.map(v => (
             <BlueprintCard
-                {...v}
+                author={v.author}
+                blueprintType={v.blueprintType}
+                id={v.id}
+                image={v.image}
+                numberOfFavorites={v.numberOfFavorites}
+                lastUpdatedDate={v.lastUpdatedDate}
+                tags={v.tags}
+                title={v.title}
+                version={v.version}
+                descriptionMarkdown={v.descriptionMarkdown}
                 key={v.id}
                 button={
                     <Button

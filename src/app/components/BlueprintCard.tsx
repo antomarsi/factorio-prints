@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import Link from 'next/link';
 import {
     FaGear,
@@ -12,20 +12,21 @@ import { format, formatDistance } from 'date-fns';
 import { twJoin } from 'tailwind-merge';
 import { PanelInset } from './Panel';
 import SlotButton from './SlotButton';
+import { BlueprintType } from '@/lib/blueprint';
 
-export type BlueprintCardProps = {
+export type BlueprintCardProps =  {
     image: string;
     title: string;
     author?: {
-        name: string;
-        id: string;
+        displayName: string;
+        authorId: string;
     };
-    description: string;
-    updated_at: Date;
+    descriptionMarkdown?: string;
+    lastUpdatedDate: number;
     version: string;
     tags: string[];
-    category: string;
-    favorites: number;
+    blueprintType: string;
+    numberOfFavorites: number;
     id: string;
     button?: ReactNode;
 };
@@ -34,17 +35,32 @@ export default function BlueprintCard ({
     image,
     title,
     author,
-    description,
-    updated_at,
+    descriptionMarkdown,
+    lastUpdatedDate,
     version,
     tags,
-    category,
-    favorites,
+    numberOfFavorites,
+    blueprintType,
     id,
     className,
     button,
     ...props
 }: BlueprintCardProps & React.ComponentProps<'div'>) {
+
+    const category = useMemo(() => {
+        switch (blueprintType) {
+            case BlueprintType.BLUEPRINT:
+                return "Blueprint"
+            case BlueprintType.BOOK:
+                return "Blueprint Book";
+            case BlueprintType.UPGRADE_PLANNER:
+                return "Upgrade Planner"
+            case BlueprintType.DECONSTRUCTION_PLANNER:
+                return "Deconstruction Planner"
+            default:
+                return "Undefined";
+        } 
+    }, [blueprintType])
     return (
         <PanelInset className={twJoin('p0 !m-0 !py-3', className)} {...props}>
             <div className='flex z-[1]'>
@@ -76,15 +92,15 @@ export default function BlueprintCard ({
                                     <div>
                                         {' by '}
                                         <Link
-                                            href={`/user/${author.id}`}
+                                            href={`/user/${author.authorId}`}
                                             className='font-bold text-orange'
                                         >
-                                            {author.name}
+                                            {author.displayName}
                                         </Link>
                                     </div>
                                     <hr />
                                     <p className='line-clamp-4 whitespace-pre-line text-ellipsis'>
-                                        {description}
+                                        {descriptionMarkdown}
                                     </p>
                                 </>
                             )}
@@ -98,10 +114,10 @@ export default function BlueprintCard ({
                     <div className='mod-card-info'>
                         <div
                             className='pb-2 flex items-center'
-                            title={format(new Date(updated_at), 'P')}
+                            title={format(new Date(lastUpdatedDate), 'P')}
                         >
                             <FaClockRotateLeft size={20} className='mr-1' />
-                            {formatDistance(new Date(updated_at), new Date(), {
+                            {formatDistance(new Date(lastUpdatedDate), new Date(), {
                                 addSuffix: true
                             })}
                         </div>
@@ -116,7 +132,7 @@ export default function BlueprintCard ({
                             title='Favorites'
                         >
                             <FaHeart size={20} className='mr-1' />
-                            {favorites}
+                            {numberOfFavorites}
                         </div>
                     </div>
                 </PanelInset>

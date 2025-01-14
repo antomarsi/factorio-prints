@@ -32,6 +32,7 @@ export default function TextInput ({
             <input
                 className={twJoin('f-input', className)}
                 type='text'
+                aria-invalid={error ? true : false}
                 {...params}
             />
             {errorContent}

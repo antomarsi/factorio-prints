@@ -1,44 +1,45 @@
+import "server-only"
+import { createBlueprintForm, updateBlueprintForm } from "./models";
 export interface IBlueprint {
     id: string;
     image: string;
     title: string;
     author: {
-        name: string;
-        id: string;
-    };
-    description: string;
-    updated_at: Date;
+        authorId: string;
+        displayName: string;
+    },
+    descriptionMarkdown: string;
+    lastUpdatedDate: number;
+    createdDate: number;
     version: string;
     tags: string[];
-    category: string;
-    favorites: number;
+    blueprintType: string;
+    numberOfFavorites: number;
 }
 
+export type SearchBlueprintParams = {
+    searchTerm?: string,
+    tags?: string[],
+    ignoredTags?: string[],
+    sort?: string,
+    page?: number
+}
 
 export abstract class RepositoryInterface {
     async connect() { };
 
-    async getBlueprints(searchTerm?: string,
-        tags?: string[],
-        ignoredTags?: string[],
-        sort?: string,
-        page?: number,
-        limit?: number): Promise<{ total: number, page: number, totalPage: number, data: IBlueprint[] }> {
+    async getBlueprints({ searchTerm, tags, ignoredTags, sort, page }: SearchBlueprintParams): Promise<{ total: number, page: number, totalPage: number, data: IBlueprint[] }> {
         throw new Error("Not implemented")
     }
-    async getBlueprint(blueprintId: string) : Promise<IBlueprint> {
+    async getBlueprint(blueprintId: string): Promise<IBlueprint> {
         throw new Error("Not implemented")
     }
 
-    async getUser(userId: string) : Promise<any> {
+    async getUser(userId: string): Promise<any> {
         throw new Error("Not implemented")
     }
 
-    async getAccount(token: string) : Promise<any> {
-        throw new Error("Not implemented")
-    }
-
-    async getUserBlueprints(userId: string) : Promise<any> {
+    async getUserBlueprints(userId: string): Promise<any> {
         throw new Error("Not implemented")
     }
 
@@ -50,11 +51,11 @@ export abstract class RepositoryInterface {
         throw new Error("Not implemented")
     }
 
-    async createBlueprint(): Promise<any> {
+    async createBlueprint({title, description, blueprintString, imgUrl} : createBlueprintForm): Promise<any> {
         throw new Error("Not implemented")
     }
 
-    async updateBlueprint(): Promise<any> {
+    async updateBlueprint({blueprintId, title, description, blueprintString, imgUrl} : updateBlueprintForm): Promise<any> {
         throw new Error("Not implemented")
     }
 
@@ -65,7 +66,7 @@ export abstract class RepositoryInterface {
         throw new Error("Not implemented")
     }
 
-    async updateUser(userId: string, description: string) : Promise<any>{
+    async updateUser(displayName: string, description: string): Promise<any> {
         throw new Error("Not implemented")
     }
 }

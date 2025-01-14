@@ -1,4 +1,4 @@
-import { ComponentProps, useMemo } from 'react';
+import { ComponentProps, PropsWithChildren, useMemo } from 'react';
 import { FieldError } from 'react-hook-form';
 import { twJoin } from 'tailwind-merge';
 
@@ -17,11 +17,11 @@ export default function TextAreaInput ({
         if (
             error &&
             errorMessage &&
-            Object.keys(errorMessage).includes(error.type)
+            (error?.message || Object.keys(errorMessage).includes(error.type))
         ) {
             return (
                 <p role='alert' className='text-red-600'>
-                    {errorMessage[error.type]}
+                    {error?.message || errorMessage[error.type]}
                 </p>
             );
         }
@@ -32,7 +32,7 @@ export default function TextAreaInput ({
             <textarea
                 className={twJoin('f-input w-full h-[8.1em]', className)}
                 {...params}
-                maxLength={params.maxLength || 600}
+                aria-invalid={error ? true : false}
             />
             {errorContent}
         </>

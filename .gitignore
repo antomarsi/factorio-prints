@@ -88,3 +88,4 @@ mock-server/*.json
 src/firebase/*.json
 
 src/data/database.json
+emulator-data

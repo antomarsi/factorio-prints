@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import TextAreaInput from '../components/Input/TextAreaInput';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import TextInput from '../components/Input/TextInput';
-import { kMaxLength } from 'buffer';
+import repository from '@/repository';
 
 export interface IFormInput {
     displayName: string;
@@ -12,21 +12,16 @@ export interface IFormInput {
 }
 
 type AccountFormProps = {
+    onSubmit: SubmitHandler<IFormInput>
     defaultValues?: Partial<IFormInput>;
 };
 
-export function AccountForm ({ defaultValues }: AccountFormProps) {
+export function AccountForm ({ defaultValues, onSubmit }: AccountFormProps) {
     const {
         register,
         handleSubmit,
         formState: { errors, isLoading, isDirty }
     } = useForm<IFormInput>({ defaultValues });
-
-    const onSubmit: SubmitHandler<IFormInput> = async data => {
-        if (!data.description) {
-            throw new Error('Must be a valid username');
-        }
-    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col'>
@@ -39,7 +34,7 @@ export function AccountForm ({ defaultValues }: AccountFormProps) {
                         {...register('displayName', {
                             required: true
                         })}
-                        className='w-1/2'
+                        className='w-full'
                         aria-invalid={errors.displayName ? 'true' : 'false'}
                         error={errors.displayName}
                         errorMessage={{
