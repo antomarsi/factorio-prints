@@ -75,19 +75,19 @@ export default function Header () {
                 >
                     {[
                         {
+                            title: 'My Account',
+                            icon: <FaGear size={16} />,
+                            link: '/account'
+                        },
+                        {
                             title: 'My Favorites',
                             icon: <FaHeart size={16} />,
-                            link: '/my-favorites'
+                            link: '/account/my-favorites'
                         },
                         {
                             title: 'My Blueprints',
                             icon: <FaFolder size={16} />,
-                            link: '/my-blueprints'
-                        },
-                        {
-                            title: 'My Account',
-                            icon: <FaGear size={16} />,
-                            link: '/account'
+                            link: '/account/my-blueprints'
                         },
                         {
                             title: 'Sign out',

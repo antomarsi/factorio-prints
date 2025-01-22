@@ -43,14 +43,22 @@ const tabs = (sort?: string) => [
 ];
 
 type CustomParams = {
+    userId?: string;
     advancedSearch?: boolean;
     sort?: string;
+    favoritedBy?: string;
+    useTabs?: boolean;
+    title?: string;
 };
 
 export default async function SearchPage ({
     searchParams,
-    advancedSearch,
-    sort
+    advancedSearch = true,
+    userId,
+    favoritedBy,
+    sort,
+    useTabs = true,
+    title = 'Search'
 }: SearchParams & CustomParams) {
     const params = await searchParams;
     let tags: string[] | undefined = undefined;
@@ -67,16 +75,17 @@ export default async function SearchPage ({
     const { total, page, totalPage, data } = await repository.getBlueprints({
         ...params,
         tags,
+        userId,
         ignoredTags,
+        favoritedBy,
         sort: sort || params.sort,
         page: params.page ? Number(params.page) : undefined
     });
-    console.log(total, page, totalPage)
 
     return (
         <>
-            <Tabs items={tabs(sort)} header />
-            <Panel title='Search' className='pb-0'>
+            {useTabs && <Tabs items={tabs(sort)} header />}
+            <Panel title={title} className='pb-0'>
                 <Search>
                     <SearchResult
                         totalBlueprints={total}

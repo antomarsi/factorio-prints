@@ -1,50 +1,25 @@
 import { Panel, PanelInset } from '@/app/components/Panel';
-import { auth } from '@/firebase/server';
-import { DecodedIdToken } from 'firebase-admin/auth';
-import { cookies } from 'next/headers';
+import { getCurrentUser } from '@/firebase/server';
 import { CreateBlueprintForm, IFormInput } from './form';
 import repository from '@/repository';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
+import { blueprintForm } from '@/schemas/blueprintForm';
 
 export default async function CreatePage () {
-    const cookieStore = await cookies();
-    const authToken = cookieStore.get('firebaseIdToken')?.value;
+    const user = await getCurrentUser();
 
-    if (!authToken || !auth) {
-        return (
-            <Panel title='Create a new Blueprint'>
-                <PanelInset>
-                    <p>
-                        Please log in with Google or GitHub in order to create a
-                        new blueprint
-                    </p>
-                </PanelInset>
-            </Panel>
-        );
-    }
-    let user: DecodedIdToken | null = null;
-    try {
-        user = await auth.verifyIdToken(authToken);
-    } catch (error) {
-        return (
-            <Panel title='Create a new Blueprint'>
-                <PanelInset>
-                    <p>
-                        Please log in with Google or GitHub in order to create a
-                        new blueprint
-                    </p>
-                </PanelInset>
-            </Panel>
-        );
+    if (!user) {
+        redirect(`/user/refresh?redirect=/blueprint/create`)
     }
 
-    const onSubmit = async (data: IFormInput) => {
+    const onSubmit = async (data: z.infer<typeof blueprintForm>) => {
         'use server';
         const result = await repository.createBlueprint(data);
         if (result.success) {
-            redirect(`/blueprint/${result.id}`)
+            redirect(`/blueprint/${result.id}`);
         }
-        return result
+        return result;
     };
 
     return (

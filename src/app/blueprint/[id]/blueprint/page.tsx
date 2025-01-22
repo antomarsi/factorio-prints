@@ -14,6 +14,8 @@ const parseBlueprint = (v: any): BlueprintDataType => ({
     blueprints: v.blueprints?.map((b: any) => parseBlueprint(b))
 });
 
+
+
 export default async function BlueprintPage ({ params }: BlueprintPageParams) {
     const id = (await params).id;
     const data = await repository.getBlueprintContentTiles(id);

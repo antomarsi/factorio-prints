@@ -2,7 +2,6 @@ import "server-only";
 import db from "@/data/database.json"
 import { IBlueprint, RepositoryInterface, SearchBlueprintParams } from "./repositoryInterface";
 import { buildImageUrl } from "@/lib/utils";
-import { writeFileSync } from "fs";
 
 const markdown = `
 ## Getting Started
@@ -19,12 +18,6 @@ Visit [https://nextjs.org/docs](https://nextjs.org/docs) to view the full docume
 ## Community
 `;
 
-const changelogs = [
-    `Version: 1.1.0
-Date: 06. 12. 2024
-  Major Features:
-    - Updated to Factorio 2.0.`
-];
 
 const parseBlueprintBooks = (v: any) => {
     return Object.entries(v).map(([k, v]: [any, any]) => {
@@ -140,15 +133,6 @@ export class JsonRepository extends RepositoryInterface {
         return { total: filteredDatabase.length, page: currentPage, totalPage: Math.ceil(filteredDatabase.length / currentLimit), data: paginatedData }
     }
 
-    async getBlueprintChangelog(blueprintId: string): Promise<string[]> {
-        let database = (db as any).database;
-
-        let blueprint = database.find((v: any) => v.key == blueprintId)
-        if (!blueprint) {
-            throw new Error("Blueprint not found", { cause: 404 })
-        }
-        return changelogs
-    }
     async getBlueprintContentTiles(blueprintId: string): Promise<any> {
         const database = (db as any).database;
         let blueprint = database.filter((v: any) => v.key == blueprintId)

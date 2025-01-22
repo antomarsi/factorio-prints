@@ -3,23 +3,24 @@ import React, { createContext, useEffect, useState } from 'react';
 import {
     AuthProvider,
     onAuthStateChanged,
+    onIdTokenChanged,
     signInWithPopup,
     User
 } from 'firebase/auth';
 import { auth } from '../firebase/client';
-import Cookies from 'js-cookie';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { deleteCookie, getCookie, setCookie } from "cookies-next/client"
 
 export function getAuthToken (): string | undefined {
-    return Cookies.get('firebaseIdToken');
+    return getCookie('firebaseIdToken');
 }
 
-export function setAuthToken (token: string): string | undefined {
-    return Cookies.set('firebaseIdToken', token, { secure: true });
+export function setAuthToken (token: string): void {
+    setCookie("firebaseIdToken", token, {secure: true})
 }
 
 export function removeAuthToken (): void {
-    Cookies.remove('firebaseIdToken');
+    deleteCookie("firebaseIdToken")
 }
 
 export const AuthContext = createContext<{
@@ -41,6 +42,7 @@ export const AuthContext = createContext<{
 export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     children
 }) => {
+    const searchParams = useSearchParams();
     const [user, setUser] = useState<User>();
     const [isModerator, setIsModerator] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
@@ -48,19 +50,52 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     const router = useRouter()
 
     useEffect(() => {
+        const redirect = searchParams.get("redirect")
         const unsubcribe = onAuthStateChanged(auth, async user => {
             setUser(user || undefined);
             if (!user) {
+                setUser(undefined)
+                setLoading(false);
+                setIsModerator(false);
+                removeAuthToken();
+            } else {
+                const tokenValues = await user.getIdTokenResult(true);
+                setIsModerator(tokenValues.claims.role === 'admin');
+                setLoading(false);
+                const token = await user.getIdToken();
+                setAuthToken(token)
+                if (redirect) {
+                    router.replace(redirect)
+                } else {
+                    router.refresh()
+                }
+            }
+            if (pathname.startsWith("/account")) {
+                if (redirect) {
+                    router.replace(redirect)
+                } else {
+                    router.refresh()
+                }
+            }
+        });
+        return () => unsubcribe();
+    }, []);
+
+    useEffect(() => {
+        const unsubcribe = onIdTokenChanged(auth, async user => {
+            setUser(user || undefined);
+            if (!user) {
+                setUser(undefined)
                 setLoading(false);
                 setIsModerator(false);
                 removeAuthToken();
                 router.refresh()
             } else {
-                const tokenValues = await user.getIdTokenResult();
+                const tokenValues = await user.getIdTokenResult(true);
                 setIsModerator(tokenValues.claims.role === 'admin');
                 setLoading(false);
                 const token = await user.getIdToken();
-                setAuthToken(token);
+                setAuthToken(token)
                 router.refresh()
             }
             if (pathname.startsWith("/account")) {
@@ -90,9 +125,12 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
 
     const handleLogout = async () => {
         await auth.signOut();
+        setUser(undefined)
     };
-    const reloadUser = () => {
+    const reloadUser = async () => {
         if (auth.currentUser) {
+            const token = await auth.currentUser.getIdToken();
+            setAuthToken(token)
             setUser(auth.currentUser);
         }
     };

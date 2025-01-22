@@ -26,7 +26,8 @@ export default function SlotButton ({
                 className={twJoin(
                     'slot-button-inline',
                     className,
-                    disabled && 'disabled'
+                    disabled && 'disabled',
+                    selected && 'selected'
                 )}
                 {...props}
             >

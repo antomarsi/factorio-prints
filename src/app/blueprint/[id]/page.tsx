@@ -6,9 +6,24 @@ import { BlueprintPageParams, tabs } from './layout';
 import repository from '@/repository';
 import { Tabs } from '@/app/components/tabs';
 import { PanelInset } from '@/app/components/Panel';
+import { Metadata } from 'next';
+import NotFound from '@/app/not-found';
+
+export const metadata: Metadata = {
+    title: process.env.NEXT_PUBLIC_WEBSITE_TITLE,
+}
 
 export default async function BlueprintPage ({ params }: BlueprintPageParams) {
-    const blueprint = await repository.getBlueprint((await params).id);
+    const paramsData = await params;
+    const blueprint = await repository.getBlueprint(paramsData.id);
+
+    if (!blueprint) {
+        return <NotFound/>
+    }
+
+    
+    metadata.title = `${metadata.title}: ${blueprint.title}`
+
     return (
         <>
             <Tabs items={tabs(blueprint.id)} />

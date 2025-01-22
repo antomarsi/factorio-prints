@@ -1,5 +1,7 @@
 import "server-only"
-import { createBlueprintForm, updateBlueprintForm } from "./models";
+import { createBlueprintForm } from "./models";
+import { z } from "zod";
+import { blueprintForm } from "@/schemas/blueprintForm";
 export interface IBlueprint {
     id: string;
     image: string;
@@ -12,9 +14,13 @@ export interface IBlueprint {
     lastUpdatedDate: number;
     createdDate: number;
     version: string;
+    favorited?: boolean;
     tags: string[];
     blueprintType: string;
     numberOfFavorites: number;
+    blueprintString?: string;
+    imageUrl: string;
+    isOwner?: boolean;
 }
 
 export type SearchBlueprintParams = {
@@ -22,16 +28,18 @@ export type SearchBlueprintParams = {
     tags?: string[],
     ignoredTags?: string[],
     sort?: string,
-    page?: number
+    page?: number,
+    userId?: string,
+    favoritedBy?: string
 }
 
 export abstract class RepositoryInterface {
     async connect() { };
 
-    async getBlueprints({ searchTerm, tags, ignoredTags, sort, page }: SearchBlueprintParams): Promise<{ total: number, page: number, totalPage: number, data: IBlueprint[] }> {
+    async getBlueprints({ searchTerm, tags, ignoredTags, sort, page, favoritedBy, userId }: SearchBlueprintParams): Promise<{ total: number, page: number, totalPage: number, data: IBlueprint[] }> {
         throw new Error("Not implemented")
     }
-    async getBlueprint(blueprintId: string): Promise<IBlueprint> {
+    async getBlueprint(blueprintId: string): Promise<IBlueprint | null> {
         throw new Error("Not implemented")
     }
 
@@ -39,23 +47,15 @@ export abstract class RepositoryInterface {
         throw new Error("Not implemented")
     }
 
-    async getUserBlueprints(userId: string): Promise<any> {
-        throw new Error("Not implemented")
-    }
-
     async getBlueprintContentTiles(blueprintId: string): Promise<any> {
         throw new Error("Not implemented")
     }
 
-    async getBlueprintChangelog(blueprintId: string): Promise<string[]> {
+    async createBlueprint({ title, description, blueprintString, tags, imgUrl }: z.infer<typeof blueprintForm>): Promise<any> {
         throw new Error("Not implemented")
     }
 
-    async createBlueprint({title, description, blueprintString, imgUrl} : createBlueprintForm): Promise<any> {
-        throw new Error("Not implemented")
-    }
-
-    async updateBlueprint({blueprintId, title, description, blueprintString, imgUrl} : updateBlueprintForm): Promise<any> {
+    async updateBlueprint(blueprintId: string, {title, description, blueprintString, imgUrl }: createBlueprintForm): Promise<any> {
         throw new Error("Not implemented")
     }
 

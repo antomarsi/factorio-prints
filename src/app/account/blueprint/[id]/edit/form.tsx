@@ -6,7 +6,12 @@ import TextAreaInput from '@/app/components/Input/TextAreaInput';
 import Button from '@/app/components/Button';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { ERROR_TYPE, getBlueprintName, getImgurId, getImgurIdType } from '@/lib/utils';
+import {
+    ERROR_TYPE,
+    getBlueprintName,
+    getImgurId,
+    getImgurIdType
+} from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { blueprintForm } from '@/schemas/blueprintForm';
 import { z } from 'zod';
@@ -16,15 +21,17 @@ import { PanelInset } from '@/app/components/Panel';
 
 export type IFormInput = z.infer<typeof blueprintForm>;
 
-type CreateBlueprintFormProps = {
+type UpdateBlueprintFormProps = {
     defaultValues?: Partial<IFormInput>;
     onSubmit: (data: IFormInput) => any;
+    oldImg?: string;
 };
 
-export function CreateBlueprintForm ({
+export function UpdateBlueprintForm ({
     defaultValues,
-    onSubmit
-}: CreateBlueprintFormProps) {
+    onSubmit,
+    oldImg
+}: UpdateBlueprintFormProps) {
     const {
         setError,
         register,
@@ -37,9 +44,11 @@ export function CreateBlueprintForm ({
         mode: 'onBlur',
         resolver: zodResolver(blueprintForm)
     });
+
     const watchBlueprintString = watch('blueprintString');
     const watchImgPreview = watch('imgUrl');
     const watchDescription = watch('description');
+
     const blueprintInfo = useMemo(() => {
         const fieldState = getFieldState('blueprintString');
         if (fieldState.invalid && !fieldState.isDirty) {
@@ -48,6 +57,7 @@ export function CreateBlueprintForm ({
         const blueprint = new Blueprint(watchBlueprintString);
         return blueprint.validate() ? blueprint : null;
     }, [getFieldState('blueprintString')]);
+
     const imgurPreview = useMemo(() => {
         const fieldState = getFieldState('imgUrl');
         if (fieldState.invalid && !fieldState.isDirty) {
@@ -55,7 +65,7 @@ export function CreateBlueprintForm ({
         }
         try {
             return getImgurId(watchImgPreview);
-        } catch(e) {
+        } catch (e) {
             return null;
         }
     }, [getFieldState('imgUrl')]);
@@ -177,6 +187,16 @@ export function CreateBlueprintForm ({
                     </div>
                 </div>
             )}
+            {oldImg && (
+                <div className='pb-3'>
+                    <label htmlFor='imgUrl'>
+                        <h2 className='mb-0'>Old Imgur preview:</h2>
+                    </label>
+                    <div className='mt-2 pr-4'>
+                        <img src={oldImg}/>
+                    </div>
+                </div>
+            )}
             <div className='pb-3'>
                 <label htmlFor='imgUrl'>
                     <h2 className='mb-0'>Imgur URL:</h2>
@@ -190,6 +210,7 @@ export function CreateBlueprintForm ({
                     />
                 </div>
             </div>
+
             {watchImgPreview && imgurPreview && (
                 <div className='pb-3'>
                     <label htmlFor='imgUrl'>
@@ -201,10 +222,7 @@ export function CreateBlueprintForm ({
                             lang='en'
                             data-id={imgurPreview}
                         />
-                        <script
-                            async
-                            src='//s.imgur.com/min/embed.js'
-                        ></script>
+                        <script async src='//s.imgur.com/min/embed.js'></script>
                     </div>
                 </div>
             )}

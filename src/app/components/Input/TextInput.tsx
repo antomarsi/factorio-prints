@@ -15,13 +15,15 @@ export default function TextInput ({
 }: TextInputProps) {
     const errorContent = useMemo(() => {
         if (
-            error &&
-            errorMessage &&
-            Object.keys(errorMessage).includes(error.type)
+            error?.message ||
+            (errorMessage &&
+                error?.type &&
+                Object.keys(errorMessage).includes(error.type))
         ) {
             return (
                 <p role='alert' className='text-red-600'>
-                    {errorMessage[error.type]}
+                    {error?.message ||
+                        (errorMessage && errorMessage[error.type])}
                 </p>
             );
         }

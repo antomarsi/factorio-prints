@@ -4,7 +4,7 @@ import LikeButton from '@/app/components/Button/LikeButton';
 import { Panel } from '@/app/components/Panel';
 import repository from '@/repository';
 import { PropsWithChildren } from 'react';
-import { FaDownload } from 'react-icons/fa6';
+import { FaDownload, FaPen } from 'react-icons/fa6';
 
 export type BlueprintPageParams = {
     params: Promise<any>;
@@ -27,11 +27,6 @@ export const tabs = (
             active: tab == 'blueprint'
         },
         {
-            title: 'Changelog',
-            href: `/blueprint/${id}/changelog`,
-            active: tab == 'changelog'
-        },
-        {
             title: 'Discussion',
             href: `/blueprint/${id}/discussion`,
             active: tab == 'discussion'
@@ -44,11 +39,19 @@ export default async function Layout ({
     params
 }: PropsWithChildren<BlueprintPageParams>) {
     const data = await repository.getBlueprint((await params).id);
+    if (!data) {
+        return <>{children}</>;
+    }
+
     return (
         <Panel>
             <BlueprintCard
-                author={{ displayName: data.author.displayName, authorId: data.author.authorId }}
+                author={{
+                    displayName: data.author.displayName,
+                    authorId: data.author.authorId
+                }}
                 blueprintType={data.blueprintType}
+                descriptionMarkdown={data.descriptionMarkdown}
                 lastUpdatedDate={data.lastUpdatedDate}
                 title={data.title}
                 image={data.image}
@@ -59,9 +62,22 @@ export default async function Layout ({
                 className='!p-3'
                 button={
                     <div className='flex flex-row gap-2'>
-                        <div className='block'>
-                        <LikeButton />
-                        </div>
+                        {data.isOwner && (
+                            <div className='block'>
+                                <Button
+                                    className='!justify-center gap-2'
+                                    href={`/account/blueprint/${data.id}/edit`}
+                                >
+                                    <FaPen />
+                                    Edit
+                                </Button>
+                            </div>
+                        )}
+                        {!data.isOwner && (
+                            <div className='block'>
+                                <LikeButton />
+                            </div>
+                        )}
                         <div>
                             <Button green className='!justify-center gap-2'>
                                 <FaDownload />

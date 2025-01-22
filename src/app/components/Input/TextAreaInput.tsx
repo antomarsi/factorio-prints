@@ -15,16 +15,19 @@ export default function TextAreaInput ({
 }: TextAreaInputProps) {
     const errorContent = useMemo(() => {
         if (
-            error &&
-            errorMessage &&
-            (error?.message || Object.keys(errorMessage).includes(error.type))
+            error?.message ||
+            (errorMessage &&
+                error?.type &&
+                Object.keys(errorMessage).includes(error.type))
         ) {
             return (
                 <p role='alert' className='text-red-600'>
-                    {error?.message || errorMessage[error.type]}
+                    {error?.message ||
+                        (errorMessage && errorMessage[error.type])}
                 </p>
             );
         }
+        return null
     }, [error, errorMessage]);
 
     return (
@@ -32,7 +35,7 @@ export default function TextAreaInput ({
             <textarea
                 className={twJoin('f-input w-full h-[8.1em]', className)}
                 {...params}
-                aria-invalid={error ? true : false}
+                aria-invalid={errorContent ? true : false}
             />
             {errorContent}
         </>

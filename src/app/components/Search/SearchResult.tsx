@@ -2,7 +2,7 @@
 import { FaArrowDownWideShort, FaEye } from 'react-icons/fa6';
 import SlotButton from '../SlotButton';
 import Pagination from '../Pagination';
-import { Suspense, useMemo } from 'react';
+import { Suspense, useContext, useMemo } from 'react';
 import range from 'lodash.range';
 import BlueprintCard, {
     BlueprintCardProps,
@@ -10,6 +10,8 @@ import BlueprintCard, {
 } from '../BlueprintCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Button from '../Button';
+import { AuthContext } from '@/context/auth-context';
+import LikeButton from '../Button/LikeButton';
 
 type TopSearchResultProps = {
     totalBlueprints: number;
@@ -49,6 +51,9 @@ function TopSearchResult ({
         }
         replace(`${pathname}?${params.toString()}`);
     };
+
+    const sortType = searchParams.get('sort');
+
     return (
         <div className='flex flex-wrap justify-between mb-2 mt-3 gap-2 items-center'>
             <input type='text' className='hidden' name='sort_attribute' />
@@ -59,7 +64,7 @@ function TopSearchResult ({
                         inline
                         title='Relevance'
                         className='px-2'
-                        selected={!searchParams.get('sort')}
+                        selected={!sortType || sortType == 'revelance'}
                         disabled={disabled}
                         onClick={() => onClick()}
                     />
@@ -68,14 +73,14 @@ function TopSearchResult ({
                         title='Most Recent'
                         className='px-2'
                         disabled={disabled}
-                        selected={searchParams.get('sort') == 'recent'}
+                        selected={sortType == 'recent'}
                         onClick={() => onClick('recent')}
                     />
                     <SlotButton
                         inline
                         title='Most Favorited'
                         className='px-2'
-                        selected={searchParams.get('sort') == 'favorited'}
+                        selected={sortType == 'favorited'}
                         disabled={disabled}
                         onClick={() => onClick('favorited')}
                     />
@@ -97,6 +102,7 @@ export default function SearchResult ({
     loading,
     ...props
 }: SearchResultProps) {
+    const { user } = useContext(AuthContext);
     const loadingItems = useMemo(() => {
         return range(1, limit).map(v => <SkeletonBlueprintCard key={v} />);
     }, [limit]);
@@ -116,17 +122,27 @@ export default function SearchResult ({
                 descriptionMarkdown={v.descriptionMarkdown}
                 key={v.id}
                 button={
-                    <Button
-                        green
-                        href={`/blueprint/${v.id}`}
-                        className='!justify-center gap-2'
-                    >
-                        <FaEye /> View
-                    </Button>
+                    <div className='flex flex-row gap-2'>
+                        {user && (
+                            <div className='block'>
+                                <LikeButton/>
+                            </div>
+                        )}
+                        <div>
+                            <Button
+                                green
+                                href={`/blueprint/${v.id}`}
+                                className='!justify-center gap-2'
+                            >
+                                <FaEye /> View
+                            </Button>
+                        </div>
+                    </div>
                 }
             />
         ));
-    }, [items]);
+    }, [items, user]);
+
     const suspenseTopSearch = useMemo(() => {
         return (
             <TopSearchResult
@@ -137,6 +153,7 @@ export default function SearchResult ({
             />
         );
     }, []);
+
     return (
         <div id='explorer-mainbar' className='w-3/4'>
             <Suspense fallback={suspenseTopSearch}>

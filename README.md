@@ -21,14 +21,11 @@ yarn emulator
 ```
 
 ## TO DO
-    - Finish user's blueprint page
-    - Add Update Page
+    - Fix Imgur Usage
+    - Fix timestamp for firestore
     - Add Delete page
     - Add Moderation Tools
+    - Implement tags on Create Page
     - implement copy to clipboard
     - Implement blueprint's blueprint page
-    - Implement blueprint discussion page
-    - Implement Blueprint changelog page
     - Implement Favorites
-    - Implement game versions
-    - Implement refresh tokens
