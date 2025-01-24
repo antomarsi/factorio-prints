@@ -6,6 +6,7 @@ import { createBlueprintForm, createBlueprintResponse } from "./models";
 import { buildImageUrl, ERROR_TYPE } from "@/lib/utils";
 import Blueprint from "@/lib/blueprint";
 import { getServerImgurIdType } from "@/lib/server_utils";
+import tagsFile from '@/assets/tags.json';
 
 
 export class FirestoreRepository extends RepositoryInterface {
@@ -271,5 +272,9 @@ export class FirestoreRepository extends RepositoryInterface {
         })
 
         return true;
+    }
+
+    async getTags(): Promise<Record<string, string[]>> {
+        return tagsFile;
     }
 }

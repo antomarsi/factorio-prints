@@ -154,7 +154,7 @@
     main {
         flex: 1;
     }
-    ul:not(.contact):not(.tabs){
+    ul:not(.contact):not(.tabs) {
         margin-top: 16px;
         margin-left: 32px;
         list-style-image: url('/imgs/ul-list.png');
@@ -342,6 +342,35 @@
 
     p {
         line-height: 1.25;
+    }
+
+    .select-button {
+        @apply align-middle appearance-none bg-no-repeat pr-[26px] min-h-[42px] font-normal select-none !h-auto;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+        background-position-x: calc(100% - 5px);
+        background-position-y: 10px;
+        font-family: 'Titillium Web', sans-serif;
+    }
+    .select-menu-list {
+        @apply bg-[#e39827] rounded;
+    }
+    .select-menu-option {
+        @apply p-2 text-black font-normal pl-4;
+        font-family: 'Titillium Web', sans-serif;
+    }
+    .select-menu-group-option {
+        @apply p-2 text-[#505050] font-normal;
+        font-family: 'Titillium Web', sans-serif;
+    }
+    .select-menu-option.focused {
+        @apply bg-[#1967d2] text-white rounded-sm;
+    }
+    .select-multi {
+        @apply rounded bg-[#e39827] px-2 py-1 mx-1 my-[2px] h-[26px];
+        box-shadow: inset 0px 4px 2px -2px #412a07,
+            inset 2px 0px 2px 0px #5a3c10, inset -2px 0px 2px 0px #5a3c10,
+            inset 0px -2px 2px 0px #d0ae79, inset 0px -2px 4px 0px #c78627,
+            0px 0px 4px 1px #786b4f;
     }
 
     .button {
@@ -794,21 +823,21 @@
     dl {
         display: flex;
         flex-wrap: wrap;
-        align-items: center
+        align-items: center;
     }
-    
+
     dt {
         width: 65%;
-        font-weight: 600
+        font-weight: 600;
     }
-    
+
     dd {
-        width: 35%
+        width: 35%;
     }
-    
+
     dl.panel-hole {
         align-items: stretch;
-        width: 100%
+        width: 100%;
     }
 
     // Input
@@ -842,14 +871,16 @@
                 inset 0px -6px 4px -8px #818181, inset 0px -8px 4px -8px #000,
                 0px 0px 4px 0px #000;
         }
+        &::placeholder {
+            color: #505050;
+        }
     }
 
     div.textarea.disabled {
         @apply bg-[#3d3d3d] w-full;
-            box-shadow: inset 8px 0px 4px -8px #000,
-                inset -8px 0px 4px -8px #000, inset 0px 8px 4px -8px #000,
-                inset 0px -6px 4px -8px #818181, inset 0px -8px 4px -8px #000,
-                0px 0px 4px 0px #000;
+        box-shadow: inset 8px 0px 4px -8px #000, inset -8px 0px 4px -8px #000,
+            inset 0px 8px 4px -8px #000, inset 0px -6px 4px -8px #818181,
+            inset 0px -8px 4px -8px #000, 0px 0px 4px 0px #000;
     }
 
     .checkbox-label {

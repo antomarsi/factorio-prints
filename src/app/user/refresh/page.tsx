@@ -1,6 +1,6 @@
 'use client';
 import { Panel, PanelInset } from '@/app/components/Panel';
-import { AuthContext, setAuthToken } from '@/context/auth-context';
+import { AuthContext, removeAuthToken, setAuthToken } from '@/context/auth-context';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
@@ -8,26 +8,25 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 
 export default function RefreshPage () {
     const searchParams = useSearchParams();
-    const { user, handleLogout } = useContext(AuthContext);
+    const { user, handleLogout, reloadUser } = useContext(AuthContext);
     const router = useRouter();
 
-    const checkAuth = useCallback(async () => {
+    const checkAuth = async () => {
         if (!user) {
             await handleLogout();
-            //router.replace('/');
             return;
         } else {
             try {
-                const token = await user.getIdToken(true);
-                setAuthToken(token);
+                await reloadUser()
                 const redirect = searchParams.get('redirect');
                 router.replace(redirect || '/');
             } catch (e) {
+                removeAuthToken()
                 await handleLogout();
                 router.replace('/');
             }
         }
-    }, [user]);
+    }
 
     useEffect(() => {
         checkAuth();

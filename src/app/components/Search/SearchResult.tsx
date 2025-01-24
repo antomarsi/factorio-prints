@@ -3,7 +3,7 @@ import { FaArrowDownWideShort, FaEye } from 'react-icons/fa6';
 import SlotButton from '../SlotButton';
 import Pagination from '../Pagination';
 import { Suspense, useContext, useMemo } from 'react';
-import range from 'lodash.range';
+import range from 'lodash/range';
 import BlueprintCard, {
     BlueprintCardProps,
     SkeletonBlueprintCard

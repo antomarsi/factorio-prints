@@ -1,6 +1,6 @@
 'use client';
 import { FaRegFloppyDisk } from 'react-icons/fa6';
-import { useForm } from 'react-hook-form';
+import { Controller, FieldError, useForm } from 'react-hook-form';
 import TextInput from '@/app/components/Input/TextInput';
 import TextAreaInput from '@/app/components/Input/TextAreaInput';
 import Button from '@/app/components/Button';
@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { useMemo } from 'react';
 import Blueprint from '@/lib/blueprint';
 import { PanelInset } from '@/app/components/Panel';
+import SelectInput from '@/app/components/Input/SelectInput';
 
 export type IFormInput = z.infer<typeof blueprintForm>;
 
@@ -25,12 +26,14 @@ type UpdateBlueprintFormProps = {
     defaultValues?: Partial<IFormInput>;
     onSubmit: (data: IFormInput) => any;
     oldImg?: string;
+    tags: Record<string, string[]>
 };
 
 export function UpdateBlueprintForm ({
     defaultValues,
     onSubmit,
-    oldImg
+    oldImg,
+    tags
 }: UpdateBlueprintFormProps) {
     const {
         setError,
@@ -38,6 +41,7 @@ export function UpdateBlueprintForm ({
         handleSubmit,
         watch,
         getFieldState,
+        control,
         formState: { errors, isLoading, isDirty }
     } = useForm<IFormInput>({
         defaultValues,
@@ -69,6 +73,19 @@ export function UpdateBlueprintForm ({
             return null;
         }
     }, [getFieldState('imgUrl')]);
+
+    
+    const tagOptions = useMemo(() => {
+        return Object.entries(tags).reduce<
+            { label: string; options: { value: string; label: string }[] }[]
+        >((acc, [key, values]) => {
+            acc.push({
+                label: key,
+                options: values.map(v => ({ label: `${key}/${v}`, value: v }))
+            });
+            return acc;
+        }, []);
+    }, [tags]);
 
     return (
         <form
@@ -187,6 +204,28 @@ export function UpdateBlueprintForm ({
                     </div>
                 </div>
             )}
+             <div className='pb-3'>
+                <label htmlFor='tags'>
+                    <h2 className='mb-0'>Tags:</h2>
+                </label>
+                <div className='mt-2 pr-4'>
+                    <Controller
+                        name='tags'
+                        control={control}
+                        render={({ field }) => (
+                            <SelectInput
+                                options={tagOptions}
+                                isMulti
+                                isClearable
+                                placeholder='Select at least one tag...'
+                                onChange={value => field.onChange(value)}
+                                className='w-full'
+                                error={errors.tags as FieldError}
+                            />
+                        )}
+                    />
+                </div>
+            </div>
             {oldImg && (
                 <div className='pb-3'>
                     <label htmlFor='imgUrl'>

@@ -13,6 +13,7 @@ export default async function EditPage ({ params }: BlueprintPageParams) {
     const paramsData = await params;
     const user = await getCurrentUser();
     const blueprint = await repository.getBlueprint(paramsData.id);
+    const tags = await repository.getTags();
 
     if (!blueprint) {
         return <NotFound />;
@@ -45,7 +46,7 @@ export default async function EditPage ({ params }: BlueprintPageParams) {
         <>
             <Panel title={`Editing Blueprint: ${blueprint.title}`} className='medium-center'>
                 <PanelInset>
-                    <UpdateBlueprintForm onSubmit={onSubmit} defaultValues={{
+                    <UpdateBlueprintForm onSubmit={onSubmit} tags={tags} defaultValues={{
                         blueprintString: blueprint.blueprintString,
                         description:blueprint.descriptionMarkdown,
                         imgUrl: blueprint.imageUrl,

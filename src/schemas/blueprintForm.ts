@@ -11,6 +11,6 @@ export const blueprintForm = z.object({
         const blueprint = new Blueprint(v)
         return blueprint.validate()
     }, { message: "Blueprint is not valid" }),
-    tags: z.string().array().optional(),
+    tags: z.string().array().min(1, "Please select at least one tag"),
     imgUrl: z.string().regex(imgurRegexValidation, "Please use a direct link to an image like https://imgur.com/{id} or https://i.imgur.com/{id}.{ext}")
 })

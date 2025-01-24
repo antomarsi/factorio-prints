@@ -91,12 +91,17 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
                 removeAuthToken();
                 router.refresh()
             } else {
-                const tokenValues = await user.getIdTokenResult(true);
-                setIsModerator(tokenValues.claims.role === 'admin');
-                setLoading(false);
-                const token = await user.getIdToken();
-                setAuthToken(token)
-                router.refresh()
+                try {
+                    const tokenValues = await user.getIdTokenResult(true);
+                    setIsModerator(tokenValues.claims.role === 'admin');
+                    setLoading(false);
+                    const token = await user.getIdToken();
+                    setAuthToken(token)
+                    router.refresh()
+                } catch(e) {
+                    setLoading(false);
+                    await handleLogout()
+                }
             }
             if (pathname.startsWith("/account")) {
                 router.refresh()
@@ -125,11 +130,12 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
 
     const handleLogout = async () => {
         await auth.signOut();
+        removeAuthToken()
         setUser(undefined)
     };
     const reloadUser = async () => {
         if (auth.currentUser) {
-            const token = await auth.currentUser.getIdToken();
+            const token = await auth.currentUser.getIdToken(true);
             setAuthToken(token)
             setUser(auth.currentUser);
         }

@@ -69,4 +69,8 @@ export abstract class RepositoryInterface {
     async updateUser(displayName: string, description: string): Promise<any> {
         throw new Error("Not implemented")
     }
+    
+    async getTags() : Promise<Record<string, string[]>> {
+        throw new Error("Not implemented")
+    }
 }

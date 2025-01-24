@@ -8,9 +8,10 @@ import { blueprintForm } from '@/schemas/blueprintForm';
 
 export default async function CreatePage () {
     const user = await getCurrentUser();
+    const tags = await repository.getTags();
 
     if (!user) {
-        redirect(`/user/refresh?redirect=/blueprint/create`)
+        redirect(`/user/refresh?redirect=/blueprint/create`);
     }
 
     const onSubmit = async (data: z.infer<typeof blueprintForm>) => {
@@ -26,7 +27,7 @@ export default async function CreatePage () {
         <>
             <Panel title='Create a new Blueprint' className='medium-center'>
                 <PanelInset>
-                    <CreateBlueprintForm onSubmit={onSubmit} />
+                    <CreateBlueprintForm onSubmit={onSubmit} tags={tags} />
                 </PanelInset>
             </Panel>
         </>
