@@ -3,107 +3,40 @@ import React, { createContext, useEffect, useState } from 'react';
 import {
     AuthProvider,
     onAuthStateChanged,
-    onIdTokenChanged,
     signInWithPopup,
     User
 } from 'firebase/auth';
 import { auth } from '../firebase/client';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { deleteCookie, getCookie, setCookie } from "cookies-next/client"
-
-export function getAuthToken (): string | undefined {
-    return getCookie('firebaseIdToken');
-}
-
-export function setAuthToken (token: string): void {
-    setCookie("firebaseIdToken", token, {secure: true})
-}
-
-export function removeAuthToken (): void {
-    deleteCookie("firebaseIdToken")
-}
+import { useRouter } from 'next/navigation';
 
 export const AuthContext = createContext<{
     user: User | undefined;
     authenticate: (provider: AuthProvider) => Promise<void>;
     handleLogout: () => Promise<void>;
-    reloadUser: () => void;
     isModerator: boolean;
-    loading: boolean;
 }>({
     user: undefined,
     isModerator: false,
     authenticate: async _ => {},
-    handleLogout: async () => {},
-    reloadUser: () => {},
-    loading: true
+    handleLogout: async () => {}
 });
 
 export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     children
 }) => {
-    const searchParams = useSearchParams();
     const [user, setUser] = useState<User>();
     const [isModerator, setIsModerator] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
-    const pathname = usePathname()
     const router = useRouter()
 
     useEffect(() => {
-        const redirect = searchParams.get("redirect")
         const unsubcribe = onAuthStateChanged(auth, async user => {
             setUser(user || undefined);
             if (!user) {
-                setUser(undefined)
-                setLoading(false);
+                setUser(undefined);
                 setIsModerator(false);
-                removeAuthToken();
             } else {
                 const tokenValues = await user.getIdTokenResult(true);
                 setIsModerator(tokenValues.claims.role === 'admin');
-                setLoading(false);
-                const token = await user.getIdToken();
-                setAuthToken(token)
-                if (redirect) {
-                    router.replace(redirect)
-                } else {
-                    router.refresh()
-                }
-            }
-            if (pathname.startsWith("/account")) {
-                if (redirect) {
-                    router.replace(redirect)
-                } else {
-                    router.refresh()
-                }
-            }
-        });
-        return () => unsubcribe();
-    }, []);
-
-    useEffect(() => {
-        const unsubcribe = onIdTokenChanged(auth, async user => {
-            setUser(user || undefined);
-            if (!user) {
-                setUser(undefined)
-                setLoading(false);
-                setIsModerator(false);
-                removeAuthToken();
-                router.refresh()
-            } else {
-                try {
-                    const tokenValues = await user.getIdTokenResult(true);
-                    setIsModerator(tokenValues.claims.role === 'admin');
-                    setLoading(false);
-                    const token = await user.getIdToken();
-                    setAuthToken(token)
-                    router.refresh()
-                } catch(e) {
-                    setLoading(false);
-                    await handleLogout()
-                }
-            }
-            if (pathname.startsWith("/account")) {
                 router.refresh()
             }
         });
@@ -112,10 +45,23 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
 
     const authenticate = async (provider: AuthProvider) => {
         try {
-            setLoading(true);
-            const result = await signInWithPopup(auth, provider);
-            setUser(result.user);
-            setLoading(false);
+            const userCred = await signInWithPopup(auth, provider)
+            if (!userCred) {
+                return;
+            }
+            const result = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${await userCred.user.getIdToken()}`
+                }
+            });
+            if (result.status !== 200) {
+                return;
+            }
+            setUser(userCred.user);
+            const tokenValues = await userCred.user.getIdTokenResult();
+            setIsModerator(tokenValues.claims.role === 'admin');
+            router.refresh()
         } catch (error: any) {
             // Handle Errors here.
             const errorCode = error.code;
@@ -124,20 +70,17 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
             const email = error.customData.email;
             console.error({ error, errorCode, errorMessage, email });
             setUser(undefined);
-            setLoading(false);
         }
     };
 
     const handleLogout = async () => {
         await auth.signOut();
-        removeAuthToken()
-        setUser(undefined)
-    };
-    const reloadUser = async () => {
-        if (auth.currentUser) {
-            const token = await auth.currentUser.getIdToken(true);
-            setAuthToken(token)
-            setUser(auth.currentUser);
+        const response = await fetch('/api/signOut', {
+            method: 'POST'
+        });
+        if (response.status === 200) {
+            setUser(undefined);
+            router.refresh()
         }
     };
 
@@ -147,8 +90,6 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
                 user,
                 authenticate,
                 handleLogout,
-                reloadUser,
-                loading,
                 isModerator
             }}
         >

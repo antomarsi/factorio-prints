@@ -1,4 +1,4 @@
-import { Panel, PanelInset } from '@/app/components/Panel';
+import { Panel, PanelInset } from '@/components/Panel';
 
 export default function NotFound () {
     return (

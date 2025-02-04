@@ -27,9 +27,8 @@ export async function getCurrentUser() {
     if (!session) return null
     let decodedIdToken : DecodedIdToken | null = null
     try {
-        decodedIdToken = await auth.verifyIdToken(session);
+        decodedIdToken = await auth.verifySessionCookie(session, true);
     } catch (err) {
-        console.error("Session was revoked")
         return null
     }
     if (!decodedIdToken) return null;

@@ -1,0 +1,60 @@
+import { Panel, PanelInset } from '@/components/Panel';
+import { getCurrentUser } from '@/firebase/server';
+import repository from '@/repository';
+import { redirect } from 'next/navigation';
+import { BlueprintPageParams } from '@/app/(public)/blueprint/[id]/layout';
+import NotFound from '@/app/not-found';
+import { UpdateBlueprintForm } from './form';
+import { z } from 'zod';
+import { blueprintForm } from '@/schemas/blueprintForm';
+import NeedAuth from '@/components/NeedAuth';
+
+export default async function EditPage ({ params }: BlueprintPageParams) {
+    const paramsData = await params;
+    const user = await getCurrentUser();
+    const blueprint = await repository.getBlueprint(paramsData.id);
+    const tags = await repository.getTags();
+
+    if (!blueprint) {
+        return <NotFound />;
+    }
+
+    if (!user || blueprint.author.authorId != user.uid) {
+        return (
+            <Panel title='Access denied' className='medium-center'>
+                <PanelInset>
+                    <p>You are not the author of this blueprint.</p>
+                </PanelInset>
+            </Panel>
+        );
+    }
+
+    if (!user) {
+        return <NeedAuth/>
+    }
+
+    const onSubmit = async (data: z.infer<typeof blueprintForm>) => {
+        'use server';
+        const result = await repository.updateBlueprint(paramsData.id, data);
+        if (result.success) {
+            redirect(`/blueprint/${result.id}`);
+        }
+        return result;
+    };
+
+    return (
+        <>
+            <Panel title={`Editing Blueprint: ${blueprint.title}`} className='medium-center'>
+                <PanelInset>
+                    <UpdateBlueprintForm onSubmit={onSubmit} tags={tags} defaultValues={{
+                        blueprintString: blueprint.blueprintString,
+                        description:blueprint.descriptionMarkdown,
+                        imgUrl: blueprint.imageUrl,
+                        tags: blueprint.tags,
+                        title: blueprint.title
+                    }} oldImg={blueprint.image} id={paramsData.id}/>
+                </PanelInset>
+            </Panel>
+        </>
+    );
+}

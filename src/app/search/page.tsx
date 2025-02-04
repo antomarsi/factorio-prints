@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tabs } from '../components/tabs/index';
-import { Panel } from '../components/Panel';
-import SearchResult from '../components/Search/SearchResult';
-import Search from '../components/Search';
-import { BlueprintCardProps } from '../components/BlueprintCard';
+import { Tabs } from '@/components/tabs/index';
+import { Panel } from '@/components/Panel';
+import SearchResult from '@/components/Search/SearchResult';
+import Search from '@/components/Search';
+import { BlueprintCardProps } from '@/components/BlueprintCard';
 import repository from '@/repository';
 import {
     FaClockRotateLeft,

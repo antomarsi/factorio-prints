@@ -1,5 +1,5 @@
 import "server-only"
-import { createBlueprintForm } from "./models";
+import { createBlueprintForm, createBlueprintResponse } from "./models";
 import { z } from "zod";
 import { blueprintForm } from "@/schemas/blueprintForm";
 export interface IBlueprint {
@@ -13,7 +13,7 @@ export interface IBlueprint {
     descriptionMarkdown: string;
     lastUpdatedDate: number;
     createdDate: number;
-    version: string;
+    gameVersion: string;
     favorited?: boolean;
     tags: string[];
     blueprintType: string;
@@ -51,7 +51,7 @@ export abstract class RepositoryInterface {
         throw new Error("Not implemented")
     }
 
-    async createBlueprint({ title, description, blueprintString, tags, imgUrl }: z.infer<typeof blueprintForm>): Promise<any> {
+    async createBlueprint({ title, description, blueprintString, tags, imgUrl }: z.infer<typeof blueprintForm>): Promise<createBlueprintResponse> {
         throw new Error("Not implemented")
     }
 

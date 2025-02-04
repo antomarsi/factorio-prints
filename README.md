@@ -21,12 +21,8 @@ yarn emulator
 ```
 
 ## TO DO
-    - Fix Imgur Usage
-    - Fix tags using localstorage
-    - Fix timestamp for firestore
     - Add Delete page
     - Add Moderation Tools
-    - Implement tags on Create/Update Page
     - implement copy to clipboard
     - Implement blueprint's blueprint page
     - Implement Favorites

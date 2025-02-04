@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import React from 'react';
 import '@/styles/global.scss';
-import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { AuthContextProvider } from '@/context/auth-context';
 import { Titillium_Web } from 'next/font/google';
 

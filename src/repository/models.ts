@@ -5,7 +5,7 @@ export type createBlueprintForm = {
     description: string,
     blueprintString: string,
     imgUrl: string,
-    tags?: string[]
+    tags: string[]
 }
 
 export type createBlueprintResponse = {

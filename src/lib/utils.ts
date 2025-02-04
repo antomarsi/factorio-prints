@@ -65,7 +65,7 @@ function fromCharCode(bytes: Uint8Array): string {
     return result;
 }
 
-export function getBlueprintName(type: BlueprintType): string {
+export function getBlueprintName(type: BlueprintType | string): string {
     switch (type) {
         case BlueprintType.BLUEPRINT:
             return "Blueprint"

@@ -67,7 +67,9 @@ export class FirestoreRepository extends RepositoryInterface {
                     ...data,
                     id: v.id,
                     tags: Object.keys(data.tags),
-                    image: data.image ? buildImageUrl(data.image.id, data.image.type) : data.imgUrl
+                    image: data.image ? buildImageUrl(data.image.id, data.image.type) : data.imgUrl,
+                    lastUpdatedDate: data.lastUpdatedDate.toMillis(),
+                    createdDate: data.createdDate.toMillis()
                 }
             }
             ) as IBlueprint[],
@@ -88,6 +90,8 @@ export class FirestoreRepository extends RepositoryInterface {
         data.imageUrl = data.imageUrl;
         data.image = data.image ? buildImageUrl(data.image.id, data.image.type) : data.imgUrl;
         data.isOwner = user ? user.uid == data.author.authorId : false;
+        data.lastUpdatedDate = data.lastUpdatedDate.toMillis()
+        data.createdDate = data.createdDate.toMillis()
         delete data.favorites;
         return data as IBlueprint;
     }
@@ -109,6 +113,14 @@ export class FirestoreRepository extends RepositoryInterface {
     }
 
     async createBlueprint({ title, description, blueprintString, tags, imgUrl }: createBlueprintForm): Promise<createBlueprintResponse> {
+        const blueprint = new Blueprint(blueprintString)
+        if (!blueprint.validate()) {
+            return {
+                success: false,
+                type: ERROR_TYPE.INVALID_BLUEPRINT,
+                error: "invalid blueprint"
+            }
+        }
         const user = await getCurrentUser()
         if (!user) {
             return {
@@ -138,15 +150,6 @@ export class FirestoreRepository extends RepositoryInterface {
             }
         }
 
-        const blueprint = new Blueprint(blueprintString)
-        if (!blueprint.validate()) {
-            return {
-                success: false,
-                type: ERROR_TYPE.INVALID_BLUEPRINT,
-                error: "invalid blueprint"
-            }
-        }
-
         const result = await firestore.collection("blueprints").add({
             favorites: {},
             image: imgInfo,
@@ -155,7 +158,7 @@ export class FirestoreRepository extends RepositoryInterface {
             title: title,
             descriptionMarkdown: description,
             imageUrl: imgUrl,
-            tags: {},
+            tags: tags.reduce((acc, cur) => ({...acc, ...{[cur]: true}}), {}),
             blueprintType: blueprint.blueprintType,
             author: {
                 authorId: user.uid,
@@ -172,6 +175,14 @@ export class FirestoreRepository extends RepositoryInterface {
     }
 
     async updateBlueprint(blueprintId: string, { title, description, blueprintString, imgUrl, tags }: createBlueprintForm): Promise<createBlueprintResponse> {
+        const blueprint = new Blueprint(blueprintString)
+        if (!blueprint.validate()) {
+            return {
+                success: false,
+                type: ERROR_TYPE.INVALID_BLUEPRINT,
+                error: "invalid blueprint"
+            }
+        }
         const user = await getCurrentUser()
         if (!user) {
             return {
@@ -195,6 +206,7 @@ export class FirestoreRepository extends RepositoryInterface {
         let updateData: any = {}
 
         const blueprintData = (await blueprintRef.get()).data()
+        
         if (!blueprintData || blueprintData.author.authorId != user.uid) {
             return {
                 success: false,
@@ -218,14 +230,6 @@ export class FirestoreRepository extends RepositoryInterface {
             updateData.imgUrl = imgUrl
         }
         if (blueprintString != blueprintData.blueprintString) {
-            const blueprint = new Blueprint(blueprintString)
-            if (!blueprint.validate()) {
-                return {
-                    success: false,
-                    type: ERROR_TYPE.INVALID_BLUEPRINT,
-                    error: "invalid blueprint"
-                }
-            }
             updateData.blueprintString = blueprintString
             if (blueprint.blueprintType != blueprintData.blueprintType) {
                 updateData.blueprintType = blueprint.blueprintType
@@ -241,7 +245,7 @@ export class FirestoreRepository extends RepositoryInterface {
             updateData.descriptionMarkdown = description
         }
         if (tags != blueprintData.tags) {
-            updateData.tags = tags
+            updateData.tags = tags.reduce((acc, cur) => ({...acc, ...{[cur]: true}}), {})
         }
 
         await blueprintRef.update({
