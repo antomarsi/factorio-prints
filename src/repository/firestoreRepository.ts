@@ -109,7 +109,7 @@ export class FirestoreRepository extends RepositoryInterface {
     }
 
     async getBlueprintContentTiles(blueprintId: string): Promise<any> {
-        throw new Error("Not implemented")
+        return {}
     }
 
     async createBlueprint({ title, description, blueprintString, tags, imgUrl }: createBlueprintForm): Promise<createBlueprintResponse> {
@@ -277,6 +277,29 @@ export class FirestoreRepository extends RepositoryInterface {
 
         return true;
     }
+
+    async getUserProfile(): Promise<{displayName: string, avatar: string, description: string}> {
+        const user = await getCurrentUser()
+        if (!user) {
+            throw new Error("User not found")
+        }
+        const result = await firestore.collection("users").doc(user.uid).get()
+        if (!result) {
+            throw new Error("User not found")
+        }
+        const userData = result.data()
+        if (!userData) {
+            throw new Error("User not found")
+        }
+
+        return {
+            displayName: userData.displayName || user.displayName,
+            description: userData.description,
+            avatar: userData.photoURL
+        }
+    }
+
+
 
     async getTags(): Promise<Record<string, string[]>> {
         return tagsFile;

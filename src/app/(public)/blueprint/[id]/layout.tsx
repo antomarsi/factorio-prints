@@ -1,10 +1,11 @@
 import BlueprintCard from '@/components/BlueprintCard';
 import Button from '@/components/Button';
+import CopyToClipboard from '@/components/Button/CopyToClipboard';
 import FavoriteButton from '@/components/Button/FavoriteButton';
 import { Panel } from '@/components/Panel';
 import repository from '@/repository';
 import { PropsWithChildren, ReactNode } from 'react';
-import { FaDownload, FaPen } from 'react-icons/fa6';
+import { FaPen } from 'react-icons/fa6';
 
 export type BlueprintPageParams = {
     params: Promise<any>;
@@ -79,10 +80,9 @@ export default async function Layout ({
                             </div>
                         )}
                         <div>
-                            <Button green className='!justify-center gap-2'>
-                                <FaDownload />
-                                Copy to Clipboard
-                            </Button>
+                            <CopyToClipboard
+                                blueprintString={data.blueprintString}
+                            />
                         </div>
                     </div>
                 }

@@ -66,6 +66,10 @@ export abstract class RepositoryInterface {
         throw new Error("Not implemented")
     }
 
+    async getUserProfile(): Promise<{displayName: string, description: string, avatar: string}> {
+        throw new Error("Not implemented")
+    }
+
     async updateUser(displayName: string, description: string): Promise<any> {
         throw new Error("Not implemented")
     }

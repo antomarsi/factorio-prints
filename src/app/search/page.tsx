@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Tabs } from '@/components/tabs/index';
 import { Panel } from '@/components/Panel';
 import SearchResult from '@/components/Search/SearchResult';
@@ -83,7 +83,7 @@ export default async function SearchPage ({
     });
 
     return (
-        <>
+        <Suspense fallback={<></>}>
             {useTabs && <Tabs items={tabs(sort)} header />}
             <Panel title={title} className='pb-0'>
                 <Search>
@@ -96,6 +96,6 @@ export default async function SearchPage ({
                     />
                 </Search>
             </Panel>
-        </>
+        </Suspense>
     );
 }

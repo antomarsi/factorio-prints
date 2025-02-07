@@ -1,8 +1,10 @@
 'use client';
+import { format } from 'date-fns';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 
 export default function Footer () {
+    
     const links = useMemo(() => {
         const links = [
             { title: 'About', to: '/about' },
@@ -32,7 +34,7 @@ export default function Footer () {
                     {links}
                 </div>
                 <div className='text-center w-1/2 ml-4 panel-inset m-0 justify-center'>
-                    Copyright © 2016 - {new Date().getFullYear()} Factorio
+                    Copyright © 2016 - {format(new Date(), "yyyy")} Factorio
                     Prints
                 </div>
             </div>

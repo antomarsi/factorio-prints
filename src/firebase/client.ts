@@ -1,7 +1,6 @@
 "use client";
 import { FirebaseOptions, getApps, initializeApp } from 'firebase/app'
-import { getDatabase, connectDatabaseEmulator } from 'firebase/database'
-import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth'
+import { connectAuthEmulator, getAuth } from 'firebase/auth'
 
 export const firebaseConfig: FirebaseOptions = {
     apiKey: process.env.NEXT_PUBLIC_apiKey,

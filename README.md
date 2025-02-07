@@ -23,6 +23,5 @@ yarn emulator
 ## TO DO
     - Add Delete page
     - Add Moderation Tools
-    - implement copy to clipboard
     - Implement blueprint's blueprint page
     - Implement Favorites

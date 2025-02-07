@@ -96,6 +96,7 @@ function TopSearchResult ({
     );
 }
 
+
 export default function SearchResult ({
     limit = 20,
     items = [],
