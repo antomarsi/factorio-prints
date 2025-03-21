@@ -1,5 +1,5 @@
 import "server-only";
-import { IBlueprint, RepositoryInterface, SearchBlueprintParams } from "./repositoryInterface";
+import { getBlueprintStringResponse, IBlueprint, RepositoryInterface, SearchBlueprintParams } from "./repositoryInterface";
 import { auth, firestore, getCurrentUser } from "@/firebase/server";
 import { CollectionReference, DocumentData, FieldValue, Query } from "firebase-admin/firestore";
 import { createBlueprintForm, createBlueprintResponse } from "./models";
@@ -11,7 +11,7 @@ import tagsFile from '@/assets/tags.json';
 
 export class FirestoreRepository extends RepositoryInterface {
     async getBlueprints({ searchTerm, tags, ignoredTags, sort, page, userId, favoritedBy }: SearchBlueprintParams): Promise<{ total: number, page: number, totalPage: number, data: IBlueprint[] }> {
-
+        await (new Promise((resolve) => setTimeout(resolve, 2000)))
         const limit = 10
 
         let blueprintsRef: CollectionReference | Query<DocumentData, DocumentData> = firestore.collection("blueprints");
@@ -110,6 +110,18 @@ export class FirestoreRepository extends RepositoryInterface {
 
     async getBlueprintContentTiles(blueprintId: string): Promise<any> {
         return {}
+    }
+
+    async getBlueprintString(blueprintId:string) : Promise<getBlueprintStringResponse> {
+        const blueprintRef = await firestore.collection("blueprints").doc(blueprintId).get()
+        const data = blueprintRef.data();
+        if (!data) {
+            throw new Error("Blueprint not found")
+        }
+        return {
+            blueprintType: data.blueprintType,
+            blueprintString: data.blueprintString
+        };
     }
 
     async createBlueprint({ title, description, blueprintString, tags, imgUrl }: createBlueprintForm): Promise<createBlueprintResponse> {

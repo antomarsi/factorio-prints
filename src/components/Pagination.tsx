@@ -1,9 +1,9 @@
 'use client';
 import { FaAngleLeft, FaAngleRight, FaEllipsis } from 'react-icons/fa6';
 import Button from './Button';
-import { useMemo } from 'react';
+import { useMemo, useTransition } from 'react';
 import { returnPaginationRange } from '@/utils/pagination';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useFilters } from '@/context/filter-context';
 
 interface PaginationProps {
     page: number;
@@ -18,14 +18,13 @@ export default function Pagination ({
     limit,
     siblings = 1
 }: PaginationProps) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const { replace } = useRouter();
+    const { updateFilters, filters } = useFilters();
+    const [isPending, startTransition] = useTransition();
 
-    const onCLick = (page: number) => {
-        const params = new URLSearchParams(searchParams);
-        params.set('page', page.toString());
-        replace(`${pathname}?${params.toString()}`);
+    const onClick = (page: number) => {
+        startTransition(() => {
+            updateFilters({ page: page });
+        });
     };
 
     const paginationValues = useMemo(() => {
@@ -41,7 +40,7 @@ export default function Pagination ({
                     squareSm
                     type='button'
                     active={v == page}
-                    onClick={() => onCLick(v as number)}
+                    onClick={() => onClick(v as number)}
                 >
                     {v.toString()}
                 </Button>
@@ -55,7 +54,7 @@ export default function Pagination ({
                 squareSm
                 type='button'
                 disabled={page <= 1}
-                onClick={() => onCLick(page - 1)}
+                onClick={() => onClick(page - 1)}
             >
                 <FaAngleLeft size={24} fontWeight={'600'} />
             </Button>
@@ -64,7 +63,7 @@ export default function Pagination ({
                 squareSm
                 type='button'
                 disabled={page >= totalPage}
-                onClick={() => onCLick(page + 1)}
+                onClick={() => onClick(page + 1)}
             >
                 <FaAngleRight size={24} />
             </Button>

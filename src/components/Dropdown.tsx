@@ -20,7 +20,7 @@ export default function Dropdown ({
 }: PropsWithChildren<DropdownProps> & React.ComponentProps<'div'>) {
     return (
         <div className={twJoin('dropdown', props.className)}>
-            <Button>
+            <Button className='no-click'>
                 {img ? (
                     <Image
                         width={24}

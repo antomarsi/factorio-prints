@@ -1,8 +1,7 @@
 import { BlueprintCardProps } from '@/components/BlueprintCard';
-import NeedAuth from '@/components/NeedAuth';
 import SearchResult from '@/components/Search/SearchResult';
-import { getCurrentUser } from '@/firebase/server';
 import repository from '@/repository';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
     searchParams: Promise<{
@@ -10,17 +9,11 @@ type PageProps = {
         ignoredTags?: string | string[];
         q?: string;
         page?: string;
-        sort?: string;
     }>;
 };
 
 export default async function TabPage ({ searchParams }: PageProps) {
-    const user = await getCurrentUser();
-    if (!user) {
-        return <NeedAuth />;
-    }
-
-    const { tags, ignoredTags, page, sort } = await searchParams;
+    const { tags, ignoredTags, page } = await searchParams;
 
     const {
         total,
@@ -31,15 +24,16 @@ export default async function TabPage ({ searchParams }: PageProps) {
         tags: typeof tags == 'string' ? [tags] : tags,
         ignoredTags:
             typeof ignoredTags == 'string' ? [ignoredTags] : ignoredTags,
-        favoritedBy: user.uid,
-        sort: sort,
         page: page ? Number(page) : undefined
     });
+    try {
+    } catch {
+        notFound();
+    }
 
     return (
         <SearchResult
             totalBlueprints={total}
-            advancedSearch
             items={data as BlueprintCardProps[]}
             page={currentPage}
             totalPage={totalPage}

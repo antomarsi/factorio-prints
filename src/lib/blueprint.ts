@@ -1,6 +1,7 @@
 import { concat, countBy, Dictionary, every, flatMap, flatten, forOwn, fromPairs, has, isUndefined, map, reject, reverse, some, sortBy, toPairs, uniq } from "lodash";
 import { decodeV15Base64 } from "./utils";
 import entitiesWithIcons from "@/assets/entitiesWithIcons.json"
+import { ReactNode } from "react";
 
 export enum BlueprintType {
     BOOK = "blueprint_book",
@@ -32,6 +33,15 @@ const allBeltTypes = [
     ...fastBeltTypes,
     ...slowBeltTypes,
 ];
+
+
+export type BlueprintTitles = {
+    mainIcon?: ReactNode,
+    icons?: ReactNode[],
+    title: ReactNode,
+    renderLink?: string,
+    blueprints?: Array<{ blueprint?: BlueprintTitles } | { blueprint_book?: BlueprintTitles }>
+}
 
 class Blueprint {
     public readonly encodedText: string;
@@ -422,6 +432,37 @@ class Blueprint {
             tagSuggestions.push('general/tileable');
         }
         return tagSuggestions
+    }
+
+    private getBlueprintTitle(value: any) {
+
+        return value.blueprint_book ?
+            value.blueprint_book.blueprints.map((v: any) => this.getBlueprintTitle(v))
+            : value.blueprint
+    }
+
+    public formatForTable(value: any): BlueprintTitles {
+        return {
+            mainIcon: "",
+            title: "",
+            icons: [],
+            renderLink: "",
+        }
+
+    }
+
+    public getBlueprintTitles() {
+        switch (this.blueprintType) {
+            case BlueprintType.BLUEPRINT:
+                return this.decodedBlueprint
+            case BlueprintType.BOOK:
+                return this.decodedBlueprint
+            default:
+                console.log("deu mau", [this.decodedBlueprint])
+                break;
+        }
+    
+        return this.getBlueprintTitle(this.decodedBlueprint)
     }
 }
 

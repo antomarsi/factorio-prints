@@ -12,6 +12,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Button from '../Button';
 import { AuthContext } from '@/context/auth-context';
 import FavoriteButton from '../Button/FavoriteButton';
+import { useFilters } from '@/context/filter-context';
 
 type TopSearchResultProps = {
     totalBlueprints: number;
@@ -28,7 +29,6 @@ type SearchResultProps = {
     limit?: number;
     page: number;
     totalPage: number;
-    loading?: boolean;
     items?: BlueprintCardProps[];
 };
 
@@ -39,20 +39,11 @@ function TopSearchResult ({
     disabled,
     ...props
 }: TopSearchResultProps) {
-    const { replace } = useRouter();
-    const pathname = usePathname();
     const searchParams = useSearchParams();
+    const { filters, updateFilters } = useFilters();
     const onClick = (sort?: string) => {
-        const params = new URLSearchParams(searchParams);
-        if (sort) {
-            params.set('sort', sort);
-        } else {
-            params.delete('sort');
-        }
-        replace(`${pathname}?${params.toString()}`);
+        updateFilters({ sort: sort });
     };
-
-    const sortType = searchParams.get('sort');
 
     return (
         <div className='flex flex-wrap justify-between mb-2 mt-3 gap-2 items-center'>
@@ -64,7 +55,7 @@ function TopSearchResult ({
                         inline
                         title='Relevance'
                         className='px-2'
-                        selected={!sortType || sortType == 'revelance'}
+                        selected={!filters.sort || filters.sort == 'revelance'}
                         disabled={disabled}
                         onClick={() => onClick()}
                     />
@@ -73,14 +64,14 @@ function TopSearchResult ({
                         title='Most Recent'
                         className='px-2'
                         disabled={disabled}
-                        selected={sortType == 'recent'}
+                        selected={filters.sort == 'recent'}
                         onClick={() => onClick('recent')}
                     />
                     <SlotButton
                         inline
                         title='Most Favorited'
                         className='px-2'
-                        selected={sortType == 'favorited'}
+                        selected={filters.sort == 'favorited'}
                         disabled={disabled}
                         onClick={() => onClick('favorited')}
                     />
@@ -96,17 +87,12 @@ function TopSearchResult ({
     );
 }
 
-
 export default function SearchResult ({
     limit = 20,
     items = [],
-    loading,
     ...props
 }: SearchResultProps) {
     const { user } = useContext(AuthContext);
-    const loadingItems = useMemo(() => {
-        return range(1, limit).map(v => <SkeletonBlueprintCard key={v} />);
-    }, [limit]);
 
     const resultItems = useMemo(() => {
         return items.map(v => (
@@ -126,7 +112,7 @@ export default function SearchResult ({
                     <div className='flex flex-row gap-2'>
                         {user && (
                             <div className='block'>
-                                <FavoriteButton/>
+                                <FavoriteButton />
                             </div>
                         )}
                         <div>
@@ -144,38 +130,39 @@ export default function SearchResult ({
         ));
     }, [items, user]);
 
-    const suspenseTopSearch = useMemo(() => {
-        return (
+    return (
+        <div id='explorer-mainbar' className='w-3/4'>
+            <TopSearchResult
+                {...props}
+                limit={20}
+                disabled={items.length == 0}
+            />
+            <div id='blueprint-list' className='mr-3'>
+                {resultItems}
+            </div>
+            {items.length > 0 && (
+                <TopSearchResult limit={20} {...props} advancedSearch={false} />
+            )}
+        </div>
+    );
+}
+
+export function SkeletonSearchResult () {
+    const loadingItems = useMemo(() => {
+        return range(1, 20).map(v => <SkeletonBlueprintCard key={v} />);
+    }, []);
+
+    return (
+        <div id='explorer-mainbar' className='w-3/4'>
             <TopSearchResult
                 totalBlueprints={0}
                 page={0}
                 totalPage={0}
                 disabled
             />
-        );
-    }, []);
-
-    return (
-        <div id='explorer-mainbar' className='w-3/4'>
-            <Suspense fallback={suspenseTopSearch}>
-                <TopSearchResult
-                    {...props}
-                    limit={20}
-                    disabled={items.length == 0}
-                />
-            </Suspense>
             <div id='blueprint-list' className='mr-3'>
-                <Suspense fallback={loadingItems}>{resultItems}</Suspense>
+                {loadingItems}
             </div>
-            <Suspense>
-                {items.length > 0 && (
-                    <TopSearchResult
-                        limit={20}
-                        {...props}
-                        advancedSearch={false}
-                    />
-                )}
-            </Suspense>
         </div>
     );
 }

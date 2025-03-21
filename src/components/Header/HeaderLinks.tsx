@@ -11,7 +11,7 @@ export const HeaderLinks = () => {
             },
             {
                 title: 'Search',
-                link: '/search'
+                link: '/'
             },
             {
                 title: 'Create',

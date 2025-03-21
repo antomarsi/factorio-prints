@@ -391,7 +391,7 @@
                 inset 0px 0px 4px 2px #f9b44b;
             text-decoration: none;
         }
-        &:active,
+        &:active:not(.no-click),
         &.active {
             @apply relative pt-3 pb-2 bg-[#f1be64] filter-none outline-0;
             vertical-align: -2px;
@@ -726,6 +726,7 @@
     .dropdown > .submenu:focus {
         visibility: visible;
         opacity: 1;
+        cursor: pointer;
     }
     .submenu {
         & > .button {

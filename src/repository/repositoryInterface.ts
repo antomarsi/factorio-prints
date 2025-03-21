@@ -2,6 +2,7 @@ import "server-only"
 import { createBlueprintForm, createBlueprintResponse } from "./models";
 import { z } from "zod";
 import { blueprintForm } from "@/schemas/blueprintForm";
+import { BlueprintType } from "@/lib/blueprint";
 export interface IBlueprint {
     id: string;
     image: string;
@@ -33,6 +34,11 @@ export type SearchBlueprintParams = {
     favoritedBy?: string
 }
 
+export type getBlueprintStringResponse = {
+    blueprintType: BlueprintType,
+    blueprintString: string
+}
+
 export abstract class RepositoryInterface {
     async connect() { };
 
@@ -48,6 +54,10 @@ export abstract class RepositoryInterface {
     }
 
     async getBlueprintContentTiles(blueprintId: string): Promise<any> {
+        throw new Error("Not implemented")
+    }
+
+    async getBlueprintString(blueprintId: string): Promise<getBlueprintStringResponse> {
         throw new Error("Not implemented")
     }
 
