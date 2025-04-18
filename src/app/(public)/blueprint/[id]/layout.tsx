@@ -61,8 +61,9 @@ export default async function Layout ({
                 numberOfFavorites={data.numberOfFavorites}
                 id={data.id}
                 className='!p-3'
+                favoriteButton
                 button={
-                    <div className='flex flex-row gap-2'>
+                    <>
                         {data.isOwner && (
                             <div className='block'>
                                 <Button
@@ -74,17 +75,12 @@ export default async function Layout ({
                                 </Button>
                             </div>
                         )}
-                        {!data.isOwner && (
-                            <div className='block'>
-                                <FavoriteButton />
-                            </div>
-                        )}
                         <div>
                             <CopyToClipboard
                                 blueprintString={data.blueprintString}
                             />
                         </div>
-                    </div>
+                    </>
                 }
             />
             {children}

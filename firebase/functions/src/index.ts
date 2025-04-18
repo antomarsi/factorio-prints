@@ -10,7 +10,7 @@ export const onUserCreate = auth.user().onCreate(async (user) => {
     await getFirestore().doc(`users/${user.uid}`).create({
         isModerator: false,
         description: "",
-        favorites: [],
+        favorites: {},
         blueprints: []
     })
 })

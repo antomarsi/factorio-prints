@@ -3,7 +3,6 @@ import NeedAuth from '@/components/NeedAuth';
 import SearchResult from '@/components/Search/SearchResult';
 import { getCurrentUser } from '@/firebase/server';
 import repository from '@/repository';
-import { notFound } from 'next/navigation';
 
 type PageProps = {
     searchParams: Promise<{

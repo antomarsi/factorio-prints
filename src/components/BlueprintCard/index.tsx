@@ -1,20 +1,18 @@
 'use client';
 
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode, useContext, useMemo, useState } from 'react';
 import Link from 'next/link';
-import {
-    FaGear,
-    FaCubes,
-    FaHeart,
-    FaClockRotateLeft
-} from 'react-icons/fa6';
+import { FaGear, FaCubes, FaHeart, FaClockRotateLeft } from 'react-icons/fa6';
 import { format, formatDistance } from 'date-fns';
 import { twJoin } from 'tailwind-merge';
-import { PanelInset } from './Panel';
-import SlotButton from './SlotButton';
+import { PanelInset } from '../Panel';
+import SlotButton from '../SlotButton';
 import { getBlueprintName } from '@/lib/utils';
+import { AuthContext } from '@/context/auth-context';
+import FavoriteButton from '../Button/FavoriteButton';
+import { favoriteBlueprint } from './action';
 
-export type BlueprintCardProps =  {
+export type BlueprintCardProps = {
     image: string;
     title: string;
     author?: {
@@ -29,6 +27,7 @@ export type BlueprintCardProps =  {
     numberOfFavorites: number;
     id: string;
     button?: ReactNode;
+    favoriteButton?: boolean;
 };
 
 export default function BlueprintCard ({
@@ -44,8 +43,11 @@ export default function BlueprintCard ({
     id,
     className,
     button,
+    favoriteButton,
     ...props
 }: BlueprintCardProps & React.ComponentProps<'div'>) {
+    const [favoriteCount, setFavoriteCount] = useState(numberOfFavorites);
+    const { user, userInfo } = useContext(AuthContext);
 
     return (
         <PanelInset className={twJoin('p0 !m-0 !py-3', className)} {...props}>
@@ -95,7 +97,8 @@ export default function BlueprintCard ({
                 </PanelInset>
                 <PanelInset className='w-[256px] !m-0'>
                     <div className='!pb-2  flex items-center'>
-                        <FaCubes size={20} className='mr-1' /> {getBlueprintName(blueprintType)}
+                        <FaCubes size={20} className='mr-1' />{' '}
+                        {getBlueprintName(blueprintType)}
                     </div>
                     <div className='mod-card-info'>
                         <div
@@ -118,7 +121,7 @@ export default function BlueprintCard ({
                             title='Favorites'
                         >
                             <FaHeart size={20} className='mr-1' />
-                            {numberOfFavorites}
+                            {favoriteCount}
                         </div>
                     </div>
                 </PanelInset>
@@ -134,7 +137,25 @@ export default function BlueprintCard ({
                         <div className='mr-3' />
                         <div className='mr-3' hx-disinherit='*' />
                         <div className='btn blueprint-view-button btn-blueprint'>
-                            {button}
+                            {(favoriteButton || button) && (
+                                <div className='flex flex-row gap-2'>
+                                    {favoriteButton && user && (
+                                        <div className='block'>
+                                            <FavoriteButton
+                                                liked={(userInfo?.favorites || {})[id] || false}
+                                                onClick={() => {
+                                                    favoriteBlueprint(id).then(
+                                                        v => {
+                                                            setFavoriteCount(v);
+                                                        }
+                                                    );
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                    {button}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

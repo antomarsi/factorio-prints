@@ -112,7 +112,7 @@ export class FirestoreRepository extends RepositoryInterface {
         return {}
     }
 
-    async getBlueprintString(blueprintId:string) : Promise<getBlueprintStringResponse> {
+    async getBlueprintString(blueprintId: string): Promise<getBlueprintStringResponse> {
         const blueprintRef = await firestore.collection("blueprints").doc(blueprintId).get()
         const data = blueprintRef.data();
         if (!data) {
@@ -170,7 +170,7 @@ export class FirestoreRepository extends RepositoryInterface {
             title: title,
             descriptionMarkdown: description,
             imageUrl: imgUrl,
-            tags: tags.reduce((acc, cur) => ({...acc, ...{[cur]: true}}), {}),
+            tags: tags.reduce((acc, cur) => ({ ...acc, ...{ [cur]: true } }), {}),
             blueprintType: blueprint.blueprintType,
             author: {
                 authorId: user.uid,
@@ -218,7 +218,7 @@ export class FirestoreRepository extends RepositoryInterface {
         let updateData: any = {}
 
         const blueprintData = (await blueprintRef.get()).data()
-        
+
         if (!blueprintData || blueprintData.author.authorId != user.uid) {
             return {
                 success: false,
@@ -257,7 +257,7 @@ export class FirestoreRepository extends RepositoryInterface {
             updateData.descriptionMarkdown = description
         }
         if (tags != blueprintData.tags) {
-            updateData.tags = tags.reduce((acc, cur) => ({...acc, ...{[cur]: true}}), {})
+            updateData.tags = tags.reduce((acc, cur) => ({ ...acc, ...{ [cur]: true } }), {})
         }
 
         await blueprintRef.update({
@@ -270,8 +270,53 @@ export class FirestoreRepository extends RepositoryInterface {
         }
     }
 
-    async favoriteBlueprint(): Promise<any> {
-        throw new Error("Not implemented")
+    async favoriteBlueprint(blueprintId: string): Promise<number> {
+        const user = await getCurrentUser()
+        if (!user) {
+            throw new Error("User not found")
+        }
+
+        const userRef = firestore.collection("users").doc(user.uid)
+        const blueprintRef = firestore.collection("blueprints").doc(blueprintId)
+
+        let finalFavoriteCount = 0;
+
+        await firestore.runTransaction(async (t) => {
+            const userDoc = await t.get(userRef)
+            if (!userDoc.exists) {
+                throw new Error("User not found")
+            }
+            const userData = userDoc.data()
+            if (!userData) {
+                throw new Error("User not found")
+            }
+            const favorites = userData.favorites || {}
+            const alreadyFavorited = favorites[blueprintId]
+
+            const blueprintDoc = await t.get(blueprintRef)
+
+            let favoriteCount = blueprintDoc.exists ? blueprintDoc.data()?.numberOfFavorites || 0 : 0
+
+            if (alreadyFavorited) {
+                // Unfavorite
+                delete favorites[blueprintId]
+                t.update(userRef, { favorites })
+
+                t.update(blueprintRef, {
+                    numberOfFavorites: FieldValue.increment(-1)
+                })
+                finalFavoriteCount = Math.max(0, favoriteCount - 1)
+            } else {
+                favorites[blueprintId] = true
+                t.set(userRef, { favorites }, { merge: true })
+
+                t.set(blueprintRef, { numberOfFavorites: FieldValue.increment(1) }, { merge: true })
+                finalFavoriteCount = favoriteCount + 1
+            }
+        })
+
+        return finalFavoriteCount;
+
     }
     async deleteBlueprint(): Promise<any> {
         throw new Error("Not implemented")
@@ -290,7 +335,7 @@ export class FirestoreRepository extends RepositoryInterface {
         return true;
     }
 
-    async getUserProfile(): Promise<{displayName: string, avatar: string, description: string}> {
+    async getUserProfile(): Promise<{ displayName: string, avatar: string, description: string, favorites: Record<string, boolean> }> {
         const user = await getCurrentUser()
         if (!user) {
             throw new Error("User not found")
@@ -307,7 +352,8 @@ export class FirestoreRepository extends RepositoryInterface {
         return {
             displayName: userData.displayName || user.displayName,
             description: userData.description,
-            avatar: userData.photoURL
+            avatar: userData.photoURL,
+            favorites: userData.favorites
         }
     }
 

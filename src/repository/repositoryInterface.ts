@@ -69,7 +69,7 @@ export abstract class RepositoryInterface {
         throw new Error("Not implemented")
     }
 
-    async favoriteBlueprint(): Promise<any> {
+    async favoriteBlueprint(blueprintId:string): Promise<number> {
         throw new Error("Not implemented")
     }
     async deleteBlueprint(): Promise<any> {

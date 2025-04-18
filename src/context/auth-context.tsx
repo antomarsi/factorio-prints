@@ -11,11 +11,13 @@ import { useRouter } from 'next/navigation';
 
 export const AuthContext = createContext<{
     user: User | undefined;
+    userInfo: any | undefined;
     authenticate: (provider: AuthProvider) => Promise<void>;
     handleLogout: () => Promise<void>;
     isModerator: boolean;
 }>({
     user: undefined,
+    userInfo: undefined,
     isModerator: false,
     authenticate: async _ => {},
     handleLogout: async () => {}
@@ -25,8 +27,9 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
     children
 }) => {
     const [user, setUser] = useState<User>();
+    const [userInfo, setUserInfo] = useState<any>();
     const [isModerator, setIsModerator] = useState<boolean>(false);
-    const router = useRouter()
+    const router = useRouter();
 
     useEffect(() => {
         const unsubcribe = onAuthStateChanged(auth, async user => {
@@ -37,15 +40,28 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
             } else {
                 const tokenValues = await user.getIdTokenResult(true);
                 setIsModerator(tokenValues.claims.role === 'admin');
-                router.refresh()
+                router.refresh();
             }
         });
         return () => unsubcribe();
     }, []);
 
+    useEffect(() => {
+        if (!user) setUserInfo(undefined);
+        const getUserInfo = async () => {
+            const result = await fetch('/api/me', {
+                next: { tags: ['user-info'] }
+            });
+            const userInfo = await result.json()
+            setUserInfo(userInfo);
+            console.log(userInfo)
+        };
+        getUserInfo();
+    }, [user]);
+
     const authenticate = async (provider: AuthProvider) => {
         try {
-            const userCred = await signInWithPopup(auth, provider)
+            const userCred = await signInWithPopup(auth, provider);
             if (!userCred) {
                 return;
             }
@@ -61,7 +77,7 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
             setUser(userCred.user);
             const tokenValues = await userCred.user.getIdTokenResult();
             setIsModerator(tokenValues.claims.role === 'admin');
-            router.refresh()
+            router.refresh();
         } catch (error: any) {
             // Handle Errors here.
             const errorCode = error.code;
@@ -80,7 +96,7 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
         });
         if (response.status === 200) {
             setUser(undefined);
-            router.refresh()
+            router.refresh();
         }
     };
 
@@ -88,6 +104,7 @@ export const AuthContextProvider: React.FC<React.PropsWithChildren> = ({
         <AuthContext.Provider
             value={{
                 user,
+                userInfo,
                 authenticate,
                 handleLogout,
                 isModerator

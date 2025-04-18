@@ -92,8 +92,6 @@ export default function SearchResult ({
     items = [],
     ...props
 }: SearchResultProps) {
-    const { user } = useContext(AuthContext);
-
     const resultItems = useMemo(() => {
         return items.map(v => (
             <BlueprintCard
@@ -108,27 +106,19 @@ export default function SearchResult ({
                 gameVersion={v.gameVersion}
                 descriptionMarkdown={v.descriptionMarkdown}
                 key={v.id}
+                favoriteButton
                 button={
-                    <div className='flex flex-row gap-2'>
-                        {user && (
-                            <div className='block'>
-                                <FavoriteButton />
-                            </div>
-                        )}
-                        <div>
-                            <Button
-                                green
-                                href={`/blueprint/${v.id}`}
-                                className='!justify-center gap-2'
-                            >
-                                <FaEye /> View
-                            </Button>
-                        </div>
-                    </div>
+                    <Button
+                        green
+                        href={`/blueprint/${v.id}`}
+                        className='!justify-center gap-2'
+                    >
+                        <FaEye /> View
+                    </Button>
                 }
             />
         ));
-    }, [items, user]);
+    }, [items]);
 
     return (
         <div id='explorer-mainbar' className='w-3/4'>

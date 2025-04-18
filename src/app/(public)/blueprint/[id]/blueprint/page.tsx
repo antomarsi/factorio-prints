@@ -1,9 +1,10 @@
 import { BlueprintPageParams, tabs } from '../layout';
-import { PanelInset } from '@/components/Panel';
+import { Panel, PanelInset } from '@/components/Panel';
 import { Tabs } from '@/components/tabs';
 import repository from '@/repository';
 import NotFound from '@/app/not-found';
 import Blueprint from '@/lib/blueprint';
+import { BlueprintBookList } from '@/components/BlueprintBook';
 
 export default async function BlueprintPage ({ params }: BlueprintPageParams) {
     const id = (await params).id;
@@ -21,7 +22,16 @@ export default async function BlueprintPage ({ params }: BlueprintPageParams) {
     return (
         <>
             <Tabs items={tabs(id, 'blueprint')} />
+            <PanelInset>
+                <BlueprintBookList/>
+            </PanelInset>
             <PanelInset className='mb-0'>
+                <Panel>
+                    <h2>Components</h2>
+                    <PanelInset className='slots slots-rows-2 p-1 mt-0'>
+                        <div className='slot'></div>
+                    </PanelInset>
+                </Panel>
                 <div className='blueprint-page-info'>
                     <table className='panel-hole'>
                         <thead>
